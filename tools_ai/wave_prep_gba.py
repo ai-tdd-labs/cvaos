@@ -12,7 +12,9 @@ that copy and byte-compares just the target function.
   tools_ai/wave_prep_gba.py --funcs sub_0800975C,sub_0800E708
 """
 import argparse
+import datetime
 import json
+import os
 import pathlib
 import re
 import shutil
@@ -90,6 +92,21 @@ def main():
     (AI / "scratch").mkdir(parents=True, exist_ok=True)
     (AI / "briefings").mkdir(parents=True, exist_ok=True)
     (AI / "wave").mkdir(parents=True, exist_ok=True)
+
+    # claims (sm64ds-idee als repo-bestand): sla doelen over die een andere
+    # AI-sessie actief geclaimd heeft; claim de eigen doelen aan het eind
+    claims = {}
+    cf = AI / "claims.jsonl"
+    if cf.is_file():
+        for l in cf.read_text().splitlines():
+            if l.strip():
+                r = json.loads(l)
+                claims[r["func"]] = r  # laatste regel per func wint
+    who = os.environ.get("WAVE_WHO", "claude-main")
+
+    def claimed_elsewhere(fn):
+        c = claims.get(fn)
+        return bool(c and c.get("status") == "active" and c.get("who") != who)
     tricks = (AI / "tricks.jsonl")
     tricks_txt = tricks.read_text() if tricks.is_file() else "(nog leeg)"
 
@@ -101,6 +118,9 @@ def main():
         src_s, body = find_asm(func)
         if src_s is None:
             print(f"!! {func}: niet gevonden in asm/code/*.s")
+            continue
+        if claimed_elsewhere(func):
+            print(f"!! {func}: actief geclaimd door andere sessie — overgeslagen")
             continue
         addr = map_addr(func)
         callees = sorted(set(re.findall(r"\bbl\s+(\w+)", body)))
@@ -212,6 +232,13 @@ Only edit inside your working copy. The harvest tool verifies and promotes it.
         manifest = list(old.values())
     mf.write_text(json.dumps(manifest, indent=1))
     print(f"{len(manifest)} doel(en) -> ai_gba/wave/manifest.json")
+    with cf.open("a") as f:
+        for m in manifest:
+            if not claimed_elsewhere(m["func"]):
+                f.write(json.dumps({"func": m["func"], "addr": m.get("addr", "?"),
+                                    "who": who,
+                                    "date": datetime.date.today().isoformat(),
+                                    "status": "active"}) + "\n")
 
 
 if __name__ == "__main__":
