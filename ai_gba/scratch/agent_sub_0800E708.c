@@ -1485,7 +1485,22 @@ void sub_0800E540(s32 param_0, s32 param_1)
     DmaQueue_DirectCopy(var_0 << 1, (u32 *)temp_sb, (u32 *) (VRAM_BASE + 0xE000 + (var_5 * 2) + (var_3 * 0x40)));
 }
 
-// (94.64%) https://decomp.me/scratch/iF3mv
+/**
+ * @brief E708 | Draws a text banner (e.g. item/name popup) into the HUD tilemap at VRAM 0E000h.
+ *
+ * Renders string `arg0` (offset by a bank base selected via category `arg1`, which also picks
+ * the icon id for sub_0803C918), measures its pixel width (sub_0804136C, rounded up to tiles),
+ * then builds and DMA-copies three tilemap rows (top border 0xE22x, glyph row 0xE2xx from the
+ * double-buffered charbase half `unk_424`, bottom border 0xE24x). With `arg2` set the banner is
+ * centered and sub_0800E540 is chained (timer 2); otherwise it is right-aligned (timer 0xF0).
+ * Bails out when blocked by unk_42C flags (0x200 always, 0x02000000 only when arg2 == 0).
+ *
+ * Matching notes (was NONMATCH, decomp.me/scratch/iF3mv at 94.64%): the register-allocation
+ * residue needed `var_7` (a named copy of the sched1-hoisted `var_r1 + 1` temp) declared AFTER
+ * `var_2 = var_r7;` and ref-boosted with `var_7++, var_7--;` so it wins sb and forces `sp10`
+ * (and its (u16) shift temp) onto the stack, plus `var_5 = var_r7;` ordered before
+ * `var_3 = var_r1 + 2;`. Verified byte-perfect by tools_ai/gbamatch.py.
+ */
 void sub_0800E708(s32 arg0, s32 arg1, s32 arg2)
 {
     struct EwramData_unk60 *sp4;
@@ -1506,6 +1521,7 @@ void sub_0800E708(s32 arg0, s32 arg1, s32 arg2)
     s32 var_4;
     s32 var_5;
     s32 var_6;
+    s32 var_7;
 
     sp4 = &gEwramData->unk_60;
     sp8 = gEwramData->unk_60.unk_424;
@@ -1595,6 +1611,8 @@ void sub_0800E708(s32 arg0, s32 arg1, s32 arg2)
     *var_r3_2++ = 0xE620;
     DmaQueue_DirectCopy((var_0 + 4) << 1, (u32 *)spC, (u32 *) (VRAM_BASE + 0xE000 + (var_1 * 2) + (var_6 * 0x40)));
     var_2 = var_r7;
+    var_7 = var_r1 + 1;
+    var_7++, var_7--;
 
     var_r3_2 = (u16*)&gEwramData->unk_133F4[0];
     *var_r3_2++ = 0xE230;
@@ -1605,7 +1623,7 @@ void sub_0800E708(s32 arg0, s32 arg1, s32 arg2)
     }
     *var_r3_2++ = 0xE631;
     *var_r3_2++ = 0xE630;
-    DmaQueue_DirectCopy((var_0 + 4) << 1, (u32 *)spC, (u32 *) (VRAM_BASE + 0xE000 + (var_2 * 2) + ((var_r1 + 1) * 0x40)));
+    DmaQueue_DirectCopy((var_0 + 4) << 1, (u32 *)spC, (u32 *) (VRAM_BASE + 0xE000 + (var_2 * 2) + (var_7 * 0x40)));
     var_5 = var_r7;
     var_3 = var_r1 + 2;
 

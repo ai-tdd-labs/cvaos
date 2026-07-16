@@ -85,8 +85,14 @@ SECTIONS {
         src/code_08011DD0.o(.text);
         src/code_08012744.o(.text);
         src/code_08013960.o(.text);
-        asm/code/code_08014548.o(.text);
-        asm/code/code_080211F0.o(.text);
+        asm/gen/code_08014548_part0.o(.text);
+        src/h2h/sub_0801F0E4.o(.text);
+        asm/gen/code_08014548_part1.o(.text);
+        src/h2h/sub_0801F474.o(.text);
+        asm/gen/code_08014548_part2.o(.text);
+        asm/gen/code_080211F0_part0.o(.text);
+        src/h2h/sub_08026858.o(.text);
+        asm/gen/code_080211F0_part1.o(.text);
         src/code_08032444.o(.text);
         src/code_08032E4C.o(.text);
         src/code_08033CAC.o(.text);

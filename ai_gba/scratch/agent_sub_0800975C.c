@@ -153,7 +153,6 @@ static inline s16 sub_0800975C_inline_1(s32 cursor, s32 var_0)
             ptr_0 = &gEwramData->unk_143F4[cursor];
             do
             {
-                var_0++,var_0--;
                 ptr_0++;
                 cursor++;
                 count++;
@@ -210,24 +209,48 @@ static inline s32 sub_0800975C_inline_2(s32 cursor, u8 var_1)
     return -1;
 }
 
+/*
+ * Walks the 0x80-entry soul-list byte table at gEwramData->unk_143F4.
+ * param_1 > 0 steps the cursor (unk_528+unk_52A... here unk_50C/unk_50E) forward
+ * (stopping before 0xFF terminators), param_1 < 0 steps backward (clamped at 0);
+ * on success stores the byte under the cursor to unk_4FC, updates unk_50E, and
+ * recomputes unk_50C as (index-of-value - unk_50E) clamped >= 0; returns 1 when
+ * the "page" scrolled (pos moved past unk_50E+8 / before unk_50E), else 0.
+ *
+ * MATCHING STATUS (agent session 2026-07-16): NOT matched; best attempt reached
+ * 27 differing halfwords out of 0x110 (author baseline compiles to 74). All
+ * remaining diffs are hard-register permutations with identical opcode structure.
+ * Proven-effective steps (apply to the body below to reproduce the 27-diff state):
+ *   1. inside inline_1's do-while body, add `var_0++,var_0--;` as first statement
+ *      -> loop-weights var_0's REG_N_REFS (flow counts refs before combine deletes
+ *      the pair), var_0's pseudo then wins r4 and param_1 lands in r5 as in ROM
+ *      (74 -> 56 diffs).
+ *   2. add `param_0++,param_0--;` at function top -> param_0 keeps r6 instead of
+ *      losing it to short-lived 0x143F4-constant pseudos (56 -> 27 diffs).
+ * Diagnosed remaining blocker via `agbcc -dl -dg` dumps (gccdump.lreg/.greg):
+ * the sign-extended `pos` temp (refs=4, live_length=14, PREFERS r1) loses r1 to
+ * the unk_50E ldrsh temp (refs=5, live_length=16) because GCC 2.9 global-alloc
+ * sorts by ~log2(refs)*refs/live_length; one extra flow-visible ref on pos's SI
+ * pseudo (or one less on the load temp) would flip the order, but every C-level
+ * attempt (local copies, `register`, operand swaps, pos++/pos-- variants,
+ * dup conditions) either canonicalizes away before flow or perturbs the shape
+ * (46-243 diffs). Cascaded from that single r1/r2 choice: ~20 diffs in the
+ * positive path, plus `adds r3,r0,r3` vs `adds r3,r3,r0` operand order at the
+ * third inline expansion and the -param_1 bound copy picking r0 vs r1.
+ */
 // (97.73%) https://decomp.me/scratch/q50mA
-s32 sub_0800975C(struct EwramData_EntityData *param_0, s32 param_1)
+NONMATCH("asm/non_matching/sub_0800975C.inc", s32 sub_0800975C(struct EwramData_EntityData *param_0, s32 param_1))
 {
     s16 pos;
-    s32 posx;
-
-    param_0++,param_0--;
 
     if (param_1 > 0)
     {
         pos = sub_0800975C_inline_0(param_0->unk_50C.unk_50C_16.unk_50C + param_0->unk_50C.unk_50C_16.unk_50E, param_1);
-        posx = pos;
-        posx++,posx--;
-        if (posx >= 0)
+        if (pos >= 0)
         {
-            param_0->unk_4FC.unk_4FC_16.unk_4FC = posx[gEwramData->unk_143F4];
+            param_0->unk_4FC.unk_4FC_16.unk_4FC = pos[gEwramData->unk_143F4];
 
-            if (posx >= param_0->unk_50C.unk_50C_16.unk_50E + 8)
+            if (pos >= param_0->unk_50C.unk_50C_16.unk_50E + 8)
             {
                 pos = sub_0800975C_inline_1(param_0->unk_50C.unk_50C_16.unk_50E, param_1);
 
@@ -272,6 +295,7 @@ s32 sub_0800975C(struct EwramData_EntityData *param_0, s32 param_1)
 
     return 0;
 }
+END_NONMATCH
 
 static inline void sub_0800997C_inline_0(s32 val_0, s32 val_1)
 {

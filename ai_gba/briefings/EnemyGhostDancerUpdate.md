@@ -1,0 +1,235 @@
+# Target: EnemyGhostDancerUpdate (cvaos GBA, agbcc) — FRESH asm function
+
+Source asm TU: asm/code/code_080C0A1C.s (do NOT edit it)
+Your candidate (standalone TU): ai_gba/scratch/agent_EnemyGhostDancerUpdate.c
+Address: 0x80c2f0c
+Oracle (run from /Users/chrislamark/projects/recomp/nds_recompiler/ai-assisted-decomp/cvaos):
+  ../st/.venv/bin/python tools_ai/gbamatch.py --src ai_gba/scratch/agent_EnemyGhostDancerUpdate.c --func EnemyGhostDancerUpdate
+
+## Reference asm (the truth, from the ROM)
+```
+EnemyGhostDancerUpdate: @ 0x080C2F0C
+	push {r4, lr}
+	sub sp, #0x10
+	adds r4, r0, #0
+	ldrb r0, [r4, #0xa]
+	cmp r0, #5
+	bne _080C2F20
+	adds r0, r4, #0
+	bl sub_080C336C
+	b _080C3054
+_080C2F20:
+	adds r0, r4, #0
+	movs r1, #4
+	bl sub_0806D128
+	adds r3, r4, #0
+	adds r3, #0x58
+	movs r1, #1
+	ands r0, r1
+	lsls r0, r0, #5
+	ldrb r2, [r3]
+	movs r1, #0x21
+	rsbs r1, r1, #0
+	ands r1, r2
+	orrs r1, r0
+	strb r1, [r3]
+	ldrb r0, [r4, #0xa]
+	cmp r0, #3
+	beq _080C3008
+	movs r1, #0x18
+	ldrsb r1, [r4, r1]
+	cmp r1, #1
+	beq _080C2F70
+	cmp r1, #1
+	bgt _080C2F56
+	cmp r1, #0
+	beq _080C2F60
+	b _080C3008
+_080C2F56:
+	cmp r1, #2
+	beq _080C2FB4
+	cmp r1, #3
+	beq _080C2FC8
+	b _080C3008
+_080C2F60:
+	adds r2, r4, #0
+	adds r2, #0x5a
+	ldrb r1, [r2]
+	movs r0, #7
+	rsbs r0, r0, #0
+	ands r0, r1
+	strb r0, [r2]
+	b _080C3008
+_080C2F70:
+	ldrb r0, [r4, #0x19]
+	ands r1, r0
+	cmp r1, #0
+	beq _080C2F88
+	adds r2, r4, #0
+	adds r2, #0x5a
+	ldrb r1, [r2]
+	movs r0, #7
+	rsbs r0, r0, #0
+	ands r0, r1
+	strb r0, [r2]
+	b _080C2F9A
+_080C2F88:
+	adds r2, r4, #0
+	adds r2, #0x5a
+	ldrb r0, [r2]
+	movs r1, #7
+	rsbs r1, r1, #0
+	ands r1, r0
+	movs r0, #2
+	orrs r1, r0
+	strb r1, [r2]
+_080C2F9A:
+	ldrb r0, [r4, #0x19]
+	adds r1, r0, #1
+	strb r1, [r4, #0x19]
+	lsls r0, r0, #0x18
+	asrs r0, r0, #0x18
+	cmp r0, #0x20
+	ble _080C3008
+	ldrb r0, [r4, #0x18]
+	adds r0, #1
+	movs r1, #0
+	strb r0, [r4, #0x18]
+	strb r1, [r4, #0x19]
+	b _080C3008
+_080C2FB4:
+	adds r2, r4, #0
+	adds r2, #0x5a
+	ldrb r0, [r2]
+	movs r1, #7
+	rsbs r1, r1, #0
+	ands r1, r0
+	movs r0, #2
+	orrs r1, r0
+	strb r1, [r2]
+	b _080C3008
+_080C2FC8:
+	ldrb r1, [r4, #0x19]
+	movs r0, #1
+	ands r0, r1
+	cmp r0, #0
+	beq _080C2FE6
+	adds r2, r4, #0
+	adds r2, #0x5a
+	ldrb r0, [r2]
+	movs r1, #7
+	rsbs r1, r1, #0
+	ands r1, r0
+	movs r0, #2
+	orrs r1, r0
+	strb r1, [r2]
+	b _080C2FF4
+_080C2FE6:
+	adds r2, r4, #0
+	adds r2, #0x5a
+	ldrb r1, [r2]
+	movs r0, #7
+	rsbs r0, r0, #0
+	ands r0, r1
+	strb r0, [r2]
+_080C2FF4:
+	ldrb r0, [r4, #0x19]
+	adds r1, r0, #1
+	strb r1, [r4, #0x19]
+	lsls r0, r0, #0x18
+	asrs r0, r0, #0x18
+	cmp r0, #0x20
+	ble _080C3008
+	movs r0, #0
+	strb r0, [r4, #0x18]
+	strb r0, [r4, #0x19]
+_080C3008:
+	adds r0, r4, #0
+	bl sub_0806AD24
+	cmp r0, #0
+	beq _080C3022
+	ldrb r0, [r4, #0xa]
+	cmp r0, #3
+	beq _080C3054
+	mov r0, sp
+	adds r1, r4, #0
+	bl sub_080421AC
+	b _080C3054
+_080C3022:
+	ldrb r0, [r4, #0xa]
+	cmp r0, #1
+	blt _080C3040
+	cmp r0, #2
+	ble _080C3032
+	cmp r0, #3
+	beq _080C303A
+	b _080C3040
+_080C3032:
+	adds r0, r4, #0
+	bl sub_080C3190
+	b _080C3040
+_080C303A:
+	adds r0, r4, #0
+	bl sub_080C327C
+_080C3040:
+	adds r0, r4, #0
+	bl sub_0806DF20
+	ldrb r0, [r4, #0xa]
+	cmp r0, #3
+	beq _080C3054
+	mov r0, sp
+	adds r1, r4, #0
+	bl sub_080421AC
+_080C3054:
+	add sp, #0x10
+	pop {r4}
+	pop {r0}
+	bx r0
+
+
+```
+
+## Callees (bl targets)
+sub_080421AC, sub_0806AD24, sub_0806D128, sub_0806DF20, sub_080C3190, sub_080C327C, sub_080C336C — signatures: grep them in src/*.c and include/.
+Struct context: gEwramData layout lives in include/structs.h (grep the offsets).
+
+## Compiler facts (verified)
+- agbcc (GCC 2.9-era), thumb, flags: -O2 -mthumb-interwork -fhex-asm -f2003-patch
+- The oracle uses the exact Makefile pipeline (preproc | cpp-15 | agbcc | as).
+- This is NOT mwcc. GCC 2.9 idioms apply (see tricks below).
+
+## Known agbcc tricks so far (READ, and APPEND what you discover)
+{"truc": "SUPPORTED (one confirmation, sub_080370F0): GCC 2.9 keeps s16/u8 locals live via lsl/lsr 16-or-24 pairs after arithmetic; a diff showing extra shift pairs usually means the variable type is wrong (widen to s32/u32 or vice versa) - confirmed inversely: assigning a ternary of two s16 vars to an s32 temp DELETED the lsls/asrs #16 pair the ROM has (function shrank 8 bytes), so keep s16 temps s16 when the ROM shows the pairs", "wanneer": "diff shows lsls/asrs #16 or #24 pairs the ROM lacks (or misses ones it has)", "bron": "GCC2.9 general knowledge; inverse effect observed on cvaos sub_080370F0 2026-07-16"}
+{"truc": "HYPOTHESIS, one NEGATIVE data point: assignment-inside-condition `if ((x = g)) {}` vs plain `x = g;` compiled to byte-identical code on agbcc (cvaos sub_080370F0, global-pointer load, no call involved); may still matter around CALL results, unproven", "wanneer": "single mov/register-choice diff around a call result", "bron": "pret GBA folklore; null result on cvaos sub_080370F0 (non-call case) 2026-07-16"}
+{"truc": "PROCESS: the oracle compiles your WHOLE TU copy; never move/reorder other functions in the TU - only edit inside your target's block. A size mismatch note in gbamatch output means your function changed length: wrong control-flow shape", "wanneer": "always", "bron": "tools_ai/gbamatch.py design (2026-07-16)"}
+{"truc": "PROVEN: in an else-if chain over one input variable, write the in-arm mask as `x &= MASK;` and test `if (x)` instead of `if (x & MASK)`; the fresh `x & MASK` temp gets coalesced into x's register (ands r4,r0) which makes GCC 2.9 spill a backup copy of x into another low reg at function ENTRY (extra `adds r1, r4, #0`) and cascades wrong scratch-register picks (movs r3/r1/r0 swaps) through the whole function", "wanneer": "diff shows an extra reg-reg copy right after the initial load of a tested variable, plus many movs-immediate register swaps downstream", "bron": "sub_080083C8 cvaos, proven 2026-07-16"}
+{"truc": "PROVEN: agbcc only rotates/peels loops built with real for/while syntax (entry compare of element 0 inlined, table base hoisted into a callee-saved reg via `adds rX, r0, #0`); to match a NON-rotated loop (entry `b` to the bound check, increment block laid out before it, table literal `ldr r0, =tbl` reloaded every iteration) build the loop from goto+labels in source order: setup; goto cond; body-tail:; increments; cond: if (i <= 7 && *p == tbl[i]) goto body-tail;  -- goto loops get no LOOP notes so no invariant hoisting or rotation", "wanneer": "diff shows a hoisted table pointer (extra ldr rX,=table before the loop) or a peeled first-iteration compare that the ROM lacks (ROM enters via b to the cmp)", "bron": "sub_080083C8 cvaos loops 2/3 (JULIUS/NOSOUL/NOUSE compares), proven 2026-07-16"}
+{"truc": "PROVEN: a u8* struct field used as inline byte storage: `s->field[i] = v` derefs the pointer VALUE (extra ldr); `((u8*)&s->field)[i]` fixes that but GCC 2.9 fold reassociates the address to (base + i) + OFFSET while the ROM wants (base + OFFSET) + i; assign the cast to a FRESH single-use local pointer first (`p = (u8*)&s->field; p[i] = v;`) - the assignment is a fold barrier keeping (base+OFFSET)+i, and a fresh variable (unlike reusing one that lived in another reg earlier) avoids an extra reg-reg copy from register preferencing", "wanneer": "diff shows adds #imm and adds reg,reg swapped around a strb/ldrb with computed address, or an extra ldr deref the ROM lacks", "bron": "sub_080083C8 cvaos unk_94 name copy, proven 2026-07-16"}
+{"truc": "PROCESS: gbamatch's size comes from the linker map (includes trailing inter-function alignment padding) but the candidate size is st_size from agbcc's .size directive (excludes it), so a byte-perfect function whose end is not 4-aligned reports match=False diffs=0 with a 2-byte size note - same as the pristine NONMATCH asm baseline; diffs=0 equal to the baseline IS the byte-perfect criterion, and `--size 0x<st_size>` confirms match=True", "wanneer": "oracle says diffs=0 but LET OP grootte kandidaat 2 bytes short", "bron": "sub_080083C8 cvaos + tools_ai/gbamatch.py, proven 2026-07-16"}
+{"truc": "PROVEN: agbcc canonicalizes gEwramData-touch idioms - FAKE `g->field += 0` (tree-folded away, only its CSE effect on the pointer VALUE load order survives), `struct EwramData *e = gEwramData;`, `e = *&gEwramData;`, `register` qualifier, and `if ((e = g)) {}` ALL produce byte-identical code; a load-before-store order that plain source cannot give (agbcc does not hoist a global load past a pointer store: no alias info) proves the original had SOME pointer-local/touch, but the idiom choice cannot steer which low regs reload picks", "wanneer": "you need a global-pointer load ordered before an unrelated store, or you hope a FAKE variant will flip scratch-register numbers - it will not", "bron": "cvaos sub_080370F0, 5 variants byte-identical, 2026-07-16"}
+{"truc": "PROVEN: introducing a typed temp for a ternary that feeds a `+=` (any of s16/s32, fresh or reused declared var) changes SPILL decisions half a function away: an s16 arg-var (sp20) lost its stack slot, the frame stayed sub sp,#0x28 but every [sp,#N] shifted down 4 and the function shrank 8 bytes; when the direct `x += cond ? a : b;` form already matches instruction STRUCTURE, keep it - a 15-halfword pure register-permutation residue will not be fixed by temp-variable refactors, they only break the frame", "wanneer": "diff shows all [sp,#N] offsets off by 4 and a size change after you added/removed a local temp", "bron": "cvaos sub_080370F0, 6 variants, 2026-07-16"}
+{"truc": "OPEN PROBLEM sub_080370F0/sub_08037738 (both 99.63%): two 8-halfword windows where agbcc picks (ldr r2,=g / ldr r0,[r2] / mov r8,r2 sunk to block end) vs ROM (ldr r0,=g / ldr r1,[r0] / mov r8,r0 early), and (adds r1,r2,r0 / movs r0,#0 / mov r2,r9) vs ROM (adds r0,r2,r0 tied / movs r2,#0 / mov r3,r9): identical instruction structure, permuted hard regs; reload spill-reg choice appears driven by whole-function hard-reg usage counts, so the fix is probably a source difference in some OTHER (byte-coincidentally-matching) region that shifts global usage counts - not in the diff windows themselves", "wanneer": "diff windows are pure reg-number permutations and every local source variant canonicalizes identically", "bron": "cvaos sub_080370F0 session 2026-07-16, unresolved"}
+{"truc": "PROVEN: GCC 2.9 global-alloc sorts pseudos by ~log2(refs)*refs/live_length and hands out callee-saved regs in r4,r5,r6,r7 order; REG_N_REFS is counted by flow BEFORE combine deletes insns, so a no-op `x++,x--;` statement pair is a free flow-visible refs boost that survives to allocation but emits no code. Place it INSIDE a loop body to loop-weight it: `var_0++,var_0--;` as first statement of an inlined do-while moved the loop-bound copy's pseudo above param_1 (param moved r4->r5 exactly like ROM, 74->56 diffs); `param_0++,param_0--;` at function top kept the struct-pointer param in r6 instead of losing it to short-lived literal-pool pseudos (56->27)", "wanneer": "diff is a pure callee-saved register permutation (r4/r5/r6/r7 role chains swapped) with identical opcode structure", "bron": "cvaos sub_0800975C, proven 2026-07-16 (74->27 diffs)"}
+{"truc": "PROVEN: agbcc accepts -dl -dg and writes gccdump.lreg/gccdump.greg next to cwd; .greg has 'Registers to be allocated in sorted order' (refs + live_length per pseudo), 'N conflicts: ... <hard regs at end>' and 'N preferences: <hard regs>' lines plus the final 'N in M' assignment map; identify pseudos by grepping .lreg RTL for ashiftrt/sign_extend/mem patterns. This tells you EXACTLY which pseudo steals a hard reg from which (e.g. pos's SI temp prefers r1 but an ldrsh temp with refs=5/len=16 outranks refs=4/len=14 and is allocated first)", "wanneer": "register-allocation-only mismatches on agbcc; run the pipeline manually: preproc | cpp-15 | agbcc -O2 ... -dl -dg", "bron": "cvaos sub_0800975C, 2026-07-16"}
+{"truc": "PROVEN (negative): at -O2 agbcc canonicalizes away plain local copies of params (`n = param_1; use n`), `register` on params, swapped comparison operand order (`a >= b+8` vs `b+8 <= a`), duplicated conditions (`x>=0 && x>=0`), and s32 shadow copies of s16 vars even with ++/-- hacks attached - all compile byte-identical to the direct form; only multi-def hacks on the ORIGINAL variable (x++,x--) change allocation, and on an s16 var they change SHAPE (HImode defs break the single sign_extend CSE, 27->46 diffs), so ++/-- priority hacks are only safe on s32/pointer variables", "wanneer": "before burning attempts on copy/register/operand-swap knobs for pure register-permutation diffs", "bron": "cvaos sub_0800975C, ~25 variants tested 2026-07-16"}
+{"truc": "OPEN PROBLEM sub_0800975C (27 diffs, NONMATCH kept): remaining diffs all cascade from one local-vs-global alloc race: the sign-extended s16 result pseudo (refs=4/len=14, prefers r1) must be allocated BEFORE the unk_50E ldrsh temp (refs=5/len=16) as in ROM; needs +1 flow-visible ref on the s16-extension SI pseudo (compiler-generated, unreachable from C: every source-level extra ref folds before flow) or -1 ref on the ldrsh temp (its 5th ref is a CSE copy feeding a later inline arg). Also outstanding: `adds r3,r0,r3` vs `adds r3,r3,r0` ptr-init operand order in the 3rd inline expansion, and the -param_1 bound copy picking r0 vs r1", "wanneer": "if retrying sub_0800975C: start from the briefing body + the two proven ++/-- hacks (74->27), then attack the ldrsh temp's 5th ref", "bron": "cvaos sub_0800975C session 2026-07-16, unresolved"}
+{"truc": "PROVEN: early-exit shape after an allocator call: `if (e == NULL) return NULL;` makes agbcc emit the movs r0,#0 INLINE right after the compare (cmp; bne skip; movs r0,#0; b epilogue), while `if (e != NULL) { body; return e; } return NULL;` sinks the return-0 block to the function END, matching the ROM's cmp r4,#0 / bne body / b far_ret0 (relaxed far-beq) layout; picking the wrong one shifts every later instruction by 4 bytes and cascades into pool-slot and branch-distance diffs (140 halfwords here)", "wanneer": "diff starts right after the first call's null-check: candidate has movs r0,#0 early where ROM has a lone b, and everything downstream is offset by 4 bytes", "bron": "cvaos sub_0809F0D0, proven 2026-07-16 (140->0 diffs in one edit)"}
+{"truc": "SUPPORTED: consecutive `x->flags |= 4; x->flags |= 2;` statements on the same u8 field compile at -O2 to ONE ldrb + orrs #4 + orrs rN + strb (store-forwarding CSE kills the middle strb/ldrb), and the second constant (2) is CSEd from an earlier `other_field = 2;` assignment into a callee-saved-adjacent low reg (movs r3,#2 kept alive across the region); do NOT fold to `|= 6` (single orrs #6, mismatch)", "wanneer": "ROM shows one ldrb/strb byte-RMW with TWO orrs of small constants, one of which was stored to another byte field shortly before", "bron": "cvaos sub_0809F0D0 unk_556 (matches pattern in matched src/code_08033CAC.c:1172-1173), 2026-07-16"}
+{"truc": "PROCESS: cvaos has NO global.h - a standalone scratch TU must include the real repo headers (types/structs come transitively via any code_*.h, e.g. code_08009A0.h + code/code_080211F0.h + code/code_08039340.h); a wrong include makes cpp-15 fail INSIDE the oracle pipe and gbamatch then reports the misleading `symbool X niet in object (namen: [])` instead of a compile error - run the preproc|cpp-15|agbcc stages manually to see the real fatal error", "wanneer": "oracle says symbol not in object with an empty name list", "bron": "sub_08059FB4 cvaos 2026-07-16"}
+{"truc": "PROVEN: global-alloc priority formula confirmed as ~log2(refs)*refs/live_length (matches observed sorted order exactly), and callee-saved HIGH regs are tried in r8, r9, r10 order (asm(\"\":::\"r9\") clobber pushed a whole-function param from r9 to r8, proving r8 is tried first and only skipped on conflict)", "wanneer": "predicting which pseudo wins r8/sb/sl from a -dg gccdump.greg 'sorted order' list", "bron": "cvaos sub_0800E708, 2026-07-16"}
+{"truc": "PROVEN: to force a long-lived local (many stores, one read, e.g. a switch-assigned mode var) OFF a high reg and onto the stack like the ROM, do NOT demote it (impossible: refs are structural) - instead PROMOTE the sched1-hoisted CSE temp that should win the reg: name it (`var_7 = var_r1 + 1;`) right after the call where the ROM materializes it, add the `var_7++, var_7--;` refs boost, and use var_7 at the later call site; the copy from the hoisted computation coalesces to a noop (deleted) when the boosted pseudo wins the same reg, and the mode var + its (u16)-cast shift temp then spill exactly like the ROM. CRITICAL: declare it AFTER the adjacent `var_2 = var_r7;` copy - swapped statement order costs an extra mov ip shuffle (190 diffs); also naming MORE of the hoisted temps (var_0-2, var_0+4, var_r1+2) explodes the prologue (375 diffs) - name ONLY the one that must win a register", "wanneer": "diff shows a mode/index var living in sl/sb where the ROM has str [sp,#N], with the ROM keeping a hoisted x+1 temp in sb instead", "bron": "cvaos sub_0800E708 20->0 diffs, proven 2026-07-16"}
+{"truc": "PROVEN: two adjacent independent statements that each become one insn (a reg-reg copy `var_5 = var_r7;` and a spilled-temp use `var_3 = var_r1 + 2;`) are emitted in SOURCE ORDER even at -O2 with sched1; a 2-diff residue of two swapped adjacent halfwords right after a call is fixed by swapping the two source statements", "wanneer": "oracle shows exactly 2 diffs that are the same two opcodes in swapped order", "bron": "cvaos sub_0800E708 2->0 diffs, proven 2026-07-16"}
+{"truc": "PROVEN: `((x >> 1) & 1) == 1` written inline folds to !=0 (cmp #0/beq) at TREE level (fold-const); launder through a single-set local (`u32 bit = (x >> 1) & 1; if (bit == 1)`) and the cmp #1/bne survives - combine does NOT re-fold EQ(reg,1) even though nonzero_bits knows the value is 0/1; multi-set hacks (one++,one--) are unnecessary and wreck allocation (136 diffs vs match)", "wanneer": "diff shows cmp #0/beq where ROM has cmp #1/bne on a bit test", "bron": "cvaos sub_0803A8C8, final 4->0 diffs, 2026-07-16"}
+{"truc": "PROVEN: split the outer-loop increment as `next = i + 1;` inside BOTH conditional arms + `i = next;` at loop end instead of one i++ at the end: (a) i stops being a biv so loop.c does NOT strength-reduce stride*i (keeps the ROM's muls; i++ anywhere as a single statement triggered SR accumulators), (b) reproduces the adds/mov-r8 parking duplicated in both arms, (c) i dies before j is born so i and the inner counter j share r4 (i++ at end made j-init precede i's death -> conflict -> i evicted to r2 + spill around call)", "wanneer": "ROM shows the loop counter incremented+parked to r8 inside both arms of an in-loop branch, muls NOT strength-reduced, and counter+inner-counter sharing one callee-saved reg", "bron": "cvaos sub_0803A8C8, 114->52 diffs single edit, 2026-07-16"}
+{"truc": "PROVEN: `(void)&param_0;`-style statements set TREE_ADDRESSABLE, making the variable memory-resident: register params get an entry `str r0,[sp,#slot]` and every use becomes a stack load; this BLOCKS loop.c from hoisting invariant subexpressions over them (MEM is not invariant when the loop contains calls) - used to stop `param_0+param_2` being pre-computed outside the loop and to force ROM's spill-slot layout; slot order = param order then local decl order", "wanneer": "ROM stores incoming register args to the frame at entry and recomputes an invariant sum from stack loads inside the loop instead of hoisting it", "bron": "cvaos sub_0803A8C8, 92->52 chain, 2026-07-16"}
+{"truc": "PROVEN: a plain for-loop did NOT get its exit test duplicated here (entered via b to bottom test, so loop invariants stayed un-hoisted due to maybe_never); writing the guard explicitly (`i = 0; if (i < param_4) { <preheader stmts>; do {...} while (i < param_4); }`) matches the ROM rotated shape (`movs rX,#0; ldr; cmp; bhs`), and preheader statements like `masked = param_5 & 0xFFFF;` and `four = 4;` compile exactly like loop.c-hoisted invariants including the high-reg staging dance (ldr =0xFFFF -> mov sl / mov rX,sl / ands / mov sl) once register pressure pushes them to sl/sb; inner constant-count loops must then be `j = four; do {...} while (--j != 0);` (for(j=four;...) adds a guard cmp/beq the ROM lacks)", "wanneer": "candidate is 8+ bytes short with `b` into a bottom test where ROM has a duplicated entry guard, and per-iteration recomputation of loop invariants", "bron": "cvaos sub_0803A8C8, 144->92 and 123->121->52 chain, 2026-07-16"}
+{"truc": "PROVEN: to control WHICH constants a DMA/MMIO inner loop keeps in registers vs reloads per-iteration, write the sequence source-level instead of a macro: `ctrl = chunk >> 1; next = i + 1; dmaregs = (vu32 *)0x40000D4; ctrl |= 0x80000000; j = four; step = 0x400;` then in the do-while `dmaregs[0]=(u32)p; dmaregs[1]=(u32)(VRAM_BASE+0x10000+tile); dmaregs[2]=ctrl; dmaregs[2];` (bare volatile read = readback into scratch r0, NOT `ctrl = dmaregs[2]` which retargets the load to ctrl's reg) with `tile += step;` - this leaves 0x6010000 as the only in-loop literal (pool ldr each iteration, exactly ROM) and step gets ip; macro DMA_SET let loop.c hoist 0x6010000 into ip and rebuild 0x400 in-loop instead", "wanneer": "diff shows ip holding the wrong hoisted constant (VRAM base vs tile step) and the readback register differing", "bron": "cvaos sub_0803A8C8, 29->8->4 chain, 2026-07-16"}
+{"truc": "PROVEN: statement-level temps steer evaluation order without changing shape: `off = stride * i; blk = param_0 + param_2 + i; p = src + off; tile = call(blk) << 5;` gives ROM's mul->sum->src-add->bl order (direct `p = src + stride*i; tile = call(p0+p2+i)<<5;` computed p too early); `base = (u8 *)gEwramData; capp = base + ((s16)param_0 << 3) + 0x12FF1;` anchors the global deref before the index shift pair (struct-field &-of form produced ldrb [r0,#1] instead of full-const +0x12FF1 addressing); comparison side `param_3 + param_4 > *capp` gives cmp r3,r0/bls with the ldrb last", "wanneer": "pure ordering diffs around a call arg / address computation with identical instruction multiset", "bron": "cvaos sub_0803A8C8, 52->29->8 chain, 2026-07-16"}
+
+
+## Rules
+- English /* */ doc comment above the function (what it does, evidence).
+- Append NEW codegen tricks to ai_gba/tricks.jsonl as {"truc","wanneer","bron"};
+  UPDATE any HYPOTHESIS entry you prove or disprove.
+- Never touch files outside your candidate + ai_gba/tricks.jsonl.
+- Finish with the oracle command above; report its last line verbatim.

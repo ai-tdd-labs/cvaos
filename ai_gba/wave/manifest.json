@@ -22,5 +22,117 @@
   "tu": "src/code_08036B40.c",
   "scratch": "ai_gba/scratch/agent_sub_080370F0.c",
   "addr": "0x80370f0"
+ },
+ {
+  "func": "sub_0809F0D0",
+  "tu": "",
+  "asm": "asm/code/code_08090914.s",
+  "scratch": "ai_gba/scratch/agent_sub_0809F0D0.c",
+  "addr": "0x809f0d0"
+ },
+ {
+  "func": "sub_0803A8C8",
+  "tu": "",
+  "asm": "asm/code/code_08039340.s",
+  "scratch": "ai_gba/scratch/agent_sub_0803A8C8.c",
+  "addr": "0x803a8c8"
+ },
+ {
+  "func": "sub_080990D8",
+  "tu": "",
+  "asm": "asm/code/code_08090914.s",
+  "scratch": "ai_gba/scratch/agent_sub_080990D8.c",
+  "addr": "0x80990d8"
+ },
+ {
+  "func": "sub_08059FB4",
+  "tu": "",
+  "asm": "asm/code/code_08050A3C.s",
+  "scratch": "ai_gba/scratch/agent_sub_08059FB4.c",
+  "addr": "0x8059fb4"
+ },
+ {
+  "func": "sub_08076F20",
+  "tu": "",
+  "asm": "asm/code/code_080709D8.s",
+  "scratch": "ai_gba/scratch/agent_sub_08076F20.c",
+  "addr": "0x8076f20"
+ },
+ {
+  "func": "sub_0803AAEC",
+  "tu": "",
+  "asm": "asm/code/code_08039340.s",
+  "scratch": "ai_gba/scratch/agent_sub_0803AAEC.c",
+  "addr": "0x803aaec"
+ },
+ {
+  "func": "sub_0807A2E4",
+  "tu": "",
+  "asm": "asm/code/code_080709D8.s",
+  "scratch": "ai_gba/scratch/agent_sub_0807A2E4.c",
+  "addr": "0x807a2e4"
+ },
+ {
+  "func": "EnemyGhostDancerUpdate",
+  "tu": "",
+  "asm": "asm/code/code_080C0A1C.s",
+  "scratch": "ai_gba/scratch/agent_EnemyGhostDancerUpdate.c",
+  "addr": "0x80c2f0c"
+ },
+ {
+  "func": "sub_08082EA0",
+  "tu": "",
+  "asm": "asm/code/code_080809C0.s",
+  "scratch": "ai_gba/scratch/agent_sub_08082EA0.c",
+  "addr": "0x8082ea0"
+ },
+ {
+  "func": "sub_0806688C",
+  "tu": "",
+  "asm": "asm/code/code_08060B98.s",
+  "scratch": "ai_gba/scratch/agent_sub_0806688C.c",
+  "addr": "0x806688c"
+ },
+ {
+  "func": "sub_0804FCA0",
+  "tu": "",
+  "asm": "asm/code/code_08040A38.s",
+  "scratch": "ai_gba/scratch/agent_sub_0804FCA0.c",
+  "addr": "0x804fca0"
+ },
+ {
+  "func": "sub_080698A8",
+  "tu": "",
+  "asm": "asm/code/code_08060B98.s",
+  "scratch": "ai_gba/scratch/agent_sub_080698A8.c",
+  "addr": "0x80698a8"
+ },
+ {
+  "func": "sub_080BBD90",
+  "tu": "",
+  "asm": "asm/code/code_080B0AD4.s",
+  "scratch": "ai_gba/scratch/agent_sub_080BBD90.c",
+  "addr": "0x80bbd90"
+ },
+ {
+  "func": "sub_0801F0E4",
+  "tu": "",
+  "asm": "asm/code/code_08014548.s",
+  "scratch": "ai_gba/scratch/agent_sub_0801F0E4.c",
+  "addr": "0x801f0e4"
+ },
+ {
+  "func": "sub_0801F474",
+  "tu": "",
+  "asm": "asm/code/code_08014548.s",
+  "scratch": "ai_gba/scratch/agent_sub_0801F474.c",
+  "addr": "0x801f474"
+ },
+ {
+  "func": "sub_08026858",
+  "tu": "",
+  "asm": "asm/code/code_080211F0.s",
+  "scratch": "ai_gba/scratch/agent_sub_08026858.c",
+  "addr": "0x8026858"
  }
 ]
