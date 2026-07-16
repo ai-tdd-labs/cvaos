@@ -104,7 +104,11 @@ SECTIONS {
         src/code_0803889C.o(.text);
         src/code_08038A38.o(.text);
         asm/code/code_08039340.o(.text);
-        asm/code/code_08040A38.o(.text);
+        asm/gen/code_08040A38_part0.o(.text);
+        src/h2h/Object04Create.o(.text);
+        asm/gen/code_08040A38_part1.o(.text);
+        src/h2h/Object0DUpdate.o(.text);
+        asm/gen/code_08040A38_part2.o(.text);
         asm/gen/code_08050A3C_part0.o(.text);
         src/h2h/sub_08059FB4.o(.text);
         asm/gen/code_08050A3C_part1.o(.text);
