@@ -134,8 +134,13 @@ def main():
             continue
         if got[i:i + 2] != want[i:i + 2]:
             diffs.append(i)
-    size_note = "" if len(got) == size else f" (LET OP grootte: kandidaat {len(got):#x} vs doel {size:#x})"
-    ok = not diffs and len(got) == size
+    # map sizes include trailing zero alignment padding (next symbol is 4-aligned);
+    # st_size does not. Zero tail bytes in the ROM are padding, not a mismatch.
+    pad = size - len(got)
+    pad_ok = 0 < pad < 4 and want[len(got):size] == b"\x00" * pad
+    size_note = "" if (len(got) == size or pad_ok) else \
+        f" (LET OP grootte: kandidaat {len(got):#x} vs doel {size:#x})"
+    ok = not diffs and (len(got) == size or pad_ok)
     if not args.quiet and diffs:
         print(f"{len(diffs)} afwijkende halfwoorden{size_note}:")
         for i in diffs[:20]:
