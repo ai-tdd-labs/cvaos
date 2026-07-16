@@ -1,0 +1,2141 @@
+#include "code_0800CB00.h"
+#include "code_08009A0.h"
+#include "code_08001004.h"
+#include "code_08001194.h"
+#include "code_08002454.h"
+#include "code_08005894.h"
+#include "code_08008750.h"
+#include "code_080096AC.h"
+#include "code_0800B700.h"
+#include "code_0800F1FC.h"
+#include "code_08013960.h"
+#include "code/code_08014548.h"
+#include "code/code_080211F0.h"
+#include "code_08032444.h"
+#include "code_08032E4C.h"
+#include "code_08033CAC.h"
+#include "code_08035930.h"
+#include "code/code_08039340.h"
+#include "code/code_08040A38.h"
+#include "code_080D73B8.h"
+#include "gba.h"
+#include "macros.h"
+#include "agb_sram.h"
+#include "syscalls.h"
+
+#include "constants/main.h"
+#include "constants/songs.h"
+
+#include "data/data_0E0334.h"
+#include "data/data_0E3464.h"
+
+#include "structs/agb_sram.h"
+#include "structs/ewram.h"
+#include "structs/main.h"
+
+/**
+ * @brief CB00 | To document
+ * 
+ */
+void sub_0800CB00(void)
+{
+    s16 *hBlankBuf;
+    s32 temp_r5;
+    s32 scanline;
+
+    temp_r5 = gEwramData->unk_60.unk_4C8;
+    hBlankBuf = gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+    HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, REG_BG3HOFS);
+
+    for (scanline = 0; scanline < (s32)(SCREEN_SIZE_Y * 0.8f); scanline++)
+    {
+        *hBlankBuf++ = (temp_r5 * (0x40 - scanline / 2)) / 0x10;
+    }
+
+    for (scanline = 0; scanline < (s32)(SCREEN_SIZE_Y * 0.2f); scanline++)
+    {
+        *hBlankBuf++ = 0;
+    }
+
+    gEwramData->hBlankEffect.requestStart = 1;
+}
+
+/**
+ * @brief CB8C | To document
+ * 
+ * @param bgNum To document
+ * @param param_1 To document
+ * @param param_2 To document
+ * @param param_3 To document
+ */
+void sub_0800CB8C(s32 bgNum, s32 param_1, s32 param_2, s32 param_3)
+{
+    u32 frameCtr;
+    struct EwramData_unkA078 *sp8;
+    s32 temp_r0;
+    s32 scanline;
+    s32 var_sb;
+    struct BgOffset *temp_r7;
+    u16 *hBlankBuf;
+
+    frameCtr = gEwramData->frameCounter;
+    var_sb = param_1 + param_2;
+    hBlankBuf = gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+
+    temp_r7 = &gDisplayRegisters.bgOfs[bgNum];
+    sp8 = &gEwramData->bgInfo[bgNum];
+
+    if (var_sb > SCREEN_SIZE_Y)
+    {
+        var_sb = SCREEN_SIZE_Y;
+    }
+    HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0HOFS + bgNum);
+
+    for (scanline = 0; scanline < param_1; scanline++)
+    {
+        *hBlankBuf++ = temp_r7->hOfs;
+    }
+
+    for (scanline = param_1; scanline < var_sb; scanline++)
+    {
+        temp_r0 = (param_3 * (scanline - param_1)) / param_2;
+        *hBlankBuf++ = (sub_080009E4(((sp8->yPos.part16.integer + scanline) << 13) + (frameCtr << (10 - temp_r0))) >> ((temp_r0 >> 1) + 15)) + temp_r7->hOfs;
+    }
+
+    for (; scanline < SCREEN_SIZE_Y; scanline++)
+    {
+        *hBlankBuf++ = temp_r7->hOfs;
+    }
+    
+    gEwramData->hBlankEffect.requestStart = 1;
+}
+
+/**
+ * @brief CC90 | To document
+ * 
+ * @param bgNum To document
+ * @param param_1 To document
+ * @param param_2 To document
+ * @param param_3 To document
+ */
+void sub_0800CC90(s32 bgNum, s32 param_1, s32 param_2, s32 param_3)
+{
+    s32 var_r2;
+    s32 scanline;
+    struct BgOffset *bgOfs;
+    u16 *hBlankBuf;
+    s32 frameCtr;
+    struct EwramData_unkA078 *bgInfo;
+    s32 var_0;
+
+    frameCtr = gEwramData->frameCounter;
+    hBlankBuf = gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+
+    bgOfs = &gDisplayRegisters.bgOfs[bgNum];
+    bgInfo = &gEwramData->bgInfo[bgNum];
+
+    var_r2 = param_2 - param_1;
+    param_1 = param_1 - bgInfo->yPos.part16.integer;
+    if (param_1 < 0)
+    {
+        param_1 = 0;
+    }
+    else if (param_1 > SCREEN_SIZE_Y)
+    {
+        param_1 = SCREEN_SIZE_Y;
+    }
+
+    if ((param_1 + var_r2) > SCREEN_SIZE_Y)
+    {
+        var_r2 = SCREEN_SIZE_Y - param_1;
+    }
+
+    param_2 = param_1 + var_r2;
+    if (param_2 > SCREEN_SIZE_Y)
+    {
+        param_2 = SCREEN_SIZE_Y;
+    }
+    HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0HOFS + bgNum);
+
+    for (scanline = 0; scanline < param_1; scanline++)
+    {
+        *hBlankBuf++ = bgOfs->hOfs;
+    }
+    frameCtr = frameCtr << 9;
+
+    for (scanline = param_1; scanline < param_2; scanline++)
+    {
+        var_0 = sub_080009E4(((bgInfo->yPos.part16.integer + scanline) << 0xC) + (frameCtr));
+        *hBlankBuf++ = ((param_3 * var_0) >> 0x10) + bgOfs->hOfs;
+    }
+
+    for (; scanline < SCREEN_SIZE_Y; scanline++)
+    {
+        *hBlankBuf++ = bgOfs->hOfs;
+    }
+
+    gEwramData->hBlankEffect.requestStart = 1;
+}
+
+/**
+ * @brief CDAC | To document
+ * 
+ * @param bgNum To document
+ * @param param_1 To document
+ * @param param_2 To document
+ */
+void sub_0800CDAC(s32 bgNum, s32 param_1, s32 param_2)
+{
+    u32 frameCtr;
+    s32 sp8;
+    s16 *hBlankBuf;
+    s32 scanline;
+    s32 var_sb;
+    struct BgOffset *bgOfs;
+    struct EwramData_unkA078 *bgInfo;
+    s32 var_0;
+    s32 var_1;
+
+    frameCtr = gEwramData->frameCounter;
+    hBlankBuf = gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+    bgOfs = &gDisplayRegisters.bgOfs[bgNum];
+    bgInfo = &gEwramData->bgInfo[bgNum];
+
+    var_sb = param_2 - param_1;
+    param_1 = param_1 - bgInfo->yPos.part16.integer;
+    if (param_1 < 0)
+    {
+        param_1 = 0;
+    }
+    else if (param_1 > SCREEN_SIZE_Y)
+    {
+        param_1 = SCREEN_SIZE_Y;
+    }
+    if ((param_1 + var_sb) > SCREEN_SIZE_Y)
+    {
+        var_sb = SCREEN_SIZE_Y - param_1;
+    }
+    param_2 = param_1 + var_sb;
+
+    HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0HOFS + bgNum);
+    sp8 = sub_080009E4(frameCtr << 0xC);
+
+    for (scanline = 0; scanline < SCREEN_SIZE_Y; scanline++)
+    {
+        if ((scanline < param_1) || (scanline > param_2))
+        {
+            *hBlankBuf = bgOfs->hOfs;
+        }
+        else
+        {
+            var_0 = sub_080009E4((s32) (((-(param_1 << 0xC)) + 0x1000 * scanline) + (frameCtr << 0xD)) >> 2);
+            var_1 = 8 * scanline + param_1 * -8;
+            *hBlankBuf = bgOfs->hOfs + ((var_1 - ((var_1 * (var_0 + sp8)) >> 0x13)) / var_sb);
+        }
+        hBlankBuf++;
+    }
+
+    gEwramData->hBlankEffect.requestStart = 1;
+}
+
+/**
+ * @brief CED4 | To document
+ * 
+ * @param bgNum To document
+ * @param param_1 To document
+ * @param param_2 To document
+ */
+void sub_0800CED4(s32 bgNum, s32 param_1, s32 param_2)
+{
+    s32 sp4;
+    s16 *hBlankBuf;
+    s32 temp_r4_2;
+    s32 var_r4;
+    s32 scanline;
+    s32 var_r7;
+    s32 var_sb;
+    struct BgOffset *bgOfs;
+    s32 temp_r4;
+    u8 *temp_r1_2;
+    struct EwramData_unkA078 *bgInfo;
+    s32 var_1;
+    s32 var_2;
+    s32 var_3;
+    s32 var_4;
+
+    temp_r4 = gEwramData->unk_60.unk_4C8;
+    hBlankBuf = gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+    bgOfs = &gDisplayRegisters.bgOfs[bgNum];
+    bgInfo = &gEwramData->bgInfo[bgNum];
+
+    var_sb = param_2 - param_1;
+    param_1 = param_1 - bgInfo->yPos.part16.integer;
+    if (param_1 < 0)
+    {
+        param_1 = 0;
+    }
+    else if (param_1 > SCREEN_SIZE_Y)
+    {
+        param_1 = SCREEN_SIZE_Y;
+    }
+    if ((param_1 + var_sb) > SCREEN_SIZE_Y)
+    {
+        var_sb = SCREEN_SIZE_Y - param_1;
+    }
+    param_2 = param_1 + var_sb;
+
+    HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0HOFS + bgNum);
+    temp_r4 = temp_r4 << 9;
+    sp4 = sub_080009E4(temp_r4);
+
+    for (scanline = 0; scanline < SCREEN_SIZE_Y; scanline++)
+    {
+        if ((scanline < param_1) || (scanline > param_2))
+        {
+            *hBlankBuf = bgOfs->hOfs;
+        }
+        else
+        {
+            var_1 = (scanline - param_1) * 0xC;
+            var_2 = (scanline - param_1) << 0xC;
+            var_3 = sub_080009E4((temp_r4 + var_2) >> 2);
+            var_4 = (var_1 * (var_3 + sp4)) >> 0x13;
+            *hBlankBuf = bgOfs->hOfs + ((var_1 - var_4) / var_sb);
+        }
+        *hBlankBuf++;
+    }
+
+    gEwramData->hBlankEffect.requestStart = 1;
+}
+
+/**
+ * @brief D000 | To document
+ * 
+ */
+void sub_0800D000(void)
+{
+    s32 temp_r0;
+    s32 temp_r0_2;
+    s32 scanline;
+    s32 var_r6;
+    struct BgAffineDstData *hBlankBuf;
+    u32 temp_r8;
+    struct BgAffineSrcData src;
+
+    temp_r8 = gEwramData->unk_60.unk_4C8;
+    hBlankBuf = (struct BgAffineDstData *)&gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+    var_r6 = 0;
+    HBlankEffectSetup(0, SCREEN_SIZE_Y, 0x10, REG_BG2PA);
+
+    for (scanline = 0; scanline < SCREEN_SIZE_Y; scanline++)
+    {
+        src.texX = 0x8000 - (0x100 * temp_r8);
+        src.scrX = 0x78;
+        src.scrY = 0;
+        if (scanline < 0x80)
+        {
+            temp_r0 = (0x80 - scanline) << 5; // Fake?
+            temp_r0 = Div(0x80000, ((0x80 - scanline) << 5) + 0x400);
+            src.sx = temp_r0;
+            var_r6 -= temp_r0;
+            src.texY = var_r6 - (temp_r8 << 7);
+        }
+        else
+        {
+            temp_r0_2 = (scanline << 7); // Fake?
+            temp_r0_2 = Div(0x80000, (scanline << 7) - 0x3C00);
+            src.sx = temp_r0_2;
+            var_r6 -= temp_r0_2 * 2;
+            src.texY = var_r6 + (temp_r8 << 7);
+        }
+        src.sy = 0x100;
+        src.alpha = 0;
+        BgAffineSet(&src, hBlankBuf, 1);
+        hBlankBuf += 1;
+    }
+
+    gEwramData->hBlankEffect.requestStart = 1;
+}
+
+/**
+ * @brief D0F8 | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ * @param param_2 To document
+ */
+void sub_0800D0F8(s32 param_0, s32 param_1, s32 param_2)
+{
+    u32 temp_r4;
+    struct BgAffineSrcData src;
+
+    temp_r4 = gEwramData->unk_60.unk_4C8;
+    src.texX = 0x8000;
+    src.texY = 0x8000;
+    src.scrX = param_0;
+    src.scrY = param_1;
+    src.sx = (sub_080009E4(temp_r4 << 7) >> 8) + 0x100;
+    src.sy = 0x100;
+    src.alpha = (temp_r4 * param_2) << 7;
+    BgAffineSet(&src, (struct BgAffineDstData *) &gDisplayRegisters.bg2PA, 1);
+}
+
+/**
+ * @brief D154 | To document
+ * 
+ */
+void sub_0800D154(void)
+{
+    struct EwramData_unk60 *unk_60;
+    struct EwramData_unk68 *unk_68;
+
+    unk_60 = &gEwramData->unk_60;
+    unk_68 = &unk_60->unk_68;
+
+    unk_68->unk_68 = gUnk_03002CB0.dispCnt;
+    unk_68->unk_6A = gDisplayRegisters.bldCnt;
+    unk_68->unk_6C = gDisplayRegisters.bldAlpha;
+    unk_68->unk_6E_0 = gUnk_03002CB0.unk_2;
+    unk_68->unk_6E_7 = gEwramData->hBlankEffect.requestStart;
+    unk_68->unk_6F = gEwramData->hBlankEffect.vcountSetting;
+
+    DMA_COPY_32(3, &gDisplayRegisters.bgCnt, &unk_60->unk_68.unk_70, sizeof(gDisplayRegisters.bgCnt));
+    DMA_COPY_32(3, &gDisplayRegisters.win0H, &unk_60->unk_78, sizeof(unk_60->unk_78));
+}
+
+/**
+ * @brief D1F0 | To document
+ * 
+ */
+void sub_0800D1F0(void)
+{
+    struct EwramData_unk60 *unk_60;
+    struct EwramData_unk68 *unk_68;
+
+    unk_60 = &gEwramData->unk_60;
+    unk_68 = &unk_60->unk_68;
+
+    gUnk_03002CB0.dispCnt = unk_68->unk_68;
+    gDisplayRegisters.bldCnt = unk_68->unk_6A;
+    gDisplayRegisters.bldAlpha = unk_68->unk_6C;
+    gUnk_03002CB0.unk_2 = unk_68->unk_6E_0;
+    gEwramData->hBlankEffect.requestStart = unk_68->unk_6E_7;
+    gEwramData->hBlankEffect.vcountSetting = unk_68->unk_6F;
+    
+    DMA_COPY_32(3, &unk_60->unk_68.unk_70, &gDisplayRegisters.bgCnt, sizeof(unk_60->unk_68.unk_70));
+    DMA_COPY_32(3, &unk_60->unk_78, &gDisplayRegisters.win0H, sizeof(unk_60->unk_78));
+}
+
+static inline s32 sub_0800D288_inline_0(s32 param_0, s32 param_1, s32 param_2, s32 param_3, s32 param_4)
+{
+    return (param_2 * (param_0 - param_3)) / (param_1 - param_4);
+}
+
+/**
+ * @brief D288 | To document
+ * 
+ */
+void sub_0800D288(void)
+{
+    struct EwramData_unkA078 *sp28;
+    s32 sp2C;
+    s32 sp30;
+    s32 sp34;
+    u16 *sp38;
+    s16 *var_r4;
+    s16 *var_r4_2;
+    s16 *var_r4_3;
+    s16 *var_r6_2;
+    s32 temp_r2_2;
+    s32 var_r1;
+    s32 var_r1_5;
+    s32 var_r1_6;
+    s32 var_r1_7;
+    s32 var_r2_2;
+    s32 var_r2_3;
+    s32 var_r6;
+    s32 var_r6_3;
+    s32 var_r6_4;
+    s32 var_r7;
+    s32 bgNum;
+    struct BgOffset *temp_r3;
+    u16 *temp_r4;
+    u32 temp_r5;
+    s32 temp_r6;
+    u32 temp_sb;
+    u32 temp_sl;
+    struct EwramData_unkA078 *temp_r7_2;
+    struct BgAffineSrcData src;
+    struct BgAffineSrcData src1;
+    u16 *var_0;
+    u16 *var_1;
+
+    temp_r7_2 = sp28 = &gEwramData->bgInfo[1];
+    sp2C = sp28->xVel.whole;
+    sp30 = sp28->yVel.whole;
+    if (sp28->unk_18 == 0x1A)
+    {
+        sub_0800CDAC(1, 0x450, 0x4A0);
+    }
+
+    for (bgNum = 2; bgNum < 4; bgNum++)
+    {
+        temp_r7_2 = &gEwramData->bgInfo[bgNum];
+        temp_r3 = &gDisplayRegisters.bgOfs[bgNum];
+        temp_r4 = &gDisplayRegisters.bgOfs[bgNum].vOfs;
+        switch (temp_r7_2->unk_18)
+        {
+            case 1:
+                sub_0803FBBC(bgNum, sp2C, sp30);
+                break;
+
+            case 5:
+                sub_0803FBBC(bgNum, sp2C * 2, sp30);
+                break;
+
+            case 6:
+                sub_0803FBBC(bgNum, sp2C, sp30 * 2);
+                break;
+
+            case 7:
+                sub_0803FBBC(bgNum, sp2C * 2, sp30 * 2);
+                break;
+
+            case 2:
+                sub_0803FBBC(bgNum, sp2C >> 1, sp30);
+                break;
+
+            case 3:
+                sub_0803FBBC(bgNum, sp2C, sp30 >> 1);
+                break;
+
+            case 4:
+                sub_0803FBBC(bgNum, sp2C >> 1, sp30 >> 1);
+                break;
+
+            case 8:
+                temp_r3->hOfs += 1;
+                break;
+
+            case 9:
+                temp_r3->hOfs += ~sp2C;
+                break;
+
+            case 10:
+                if ((gEwramData->unk_60.unk_33C[3] & 0x02000000) != 0)
+                {
+                    *temp_r4 -= 2;
+                }
+                break;
+
+            case 11:
+                sub_0803FBBC(bgNum, sub_0800D288_inline_0(temp_r7_2->unk_14, sp28->unk_14, sp2C, 0xF0, 0xF0), sp30);
+                break;
+
+            case 12:
+                sub_0803FBBC(bgNum, sp2C, sub_0800D288_inline_0(temp_r7_2->unk_16, sp28->unk_16, sp30, 0xD0, 0xD0));
+                break;
+
+            case 13:
+                sub_0803FBBC(bgNum, sub_0800D288_inline_0(temp_r7_2->unk_14, sp28->unk_14, sp2C, 0xF0, 0xF0), sub_0800D288_inline_0(temp_r7_2->unk_16, sp28->unk_16, sp30, 0xD0, 0xD0));
+                break;
+
+            case 14:
+                sub_0800CB00();
+                break;
+
+            case 15:
+                sub_0803FBBC(bgNum, sub_0800D288_inline_0(temp_r7_2->unk_14, sp28->unk_14, sp2C, 0xF0, 0xF0), sub_0800D288_inline_0(temp_r7_2->unk_16, sp28->unk_16, sp30, 0xD0, 0xD0));
+                sub_0800CB8C(bgNum, 0, SCREEN_SIZE_Y, 1);
+                break;
+
+            case 16:
+                sub_0803FBBC(bgNum, sub_0800D288_inline_0(temp_r7_2->unk_14, sp28->unk_14, sp2C, 0xF0, 0xF0), sub_0800D288_inline_0(temp_r7_2->unk_16, sp28->unk_16, sp30, 0xD0, 0xD0));
+                sub_0800CC90(bgNum, 0, SCREEN_SIZE_Y, 2);
+                break;
+
+            case 18:
+                sub_0800D000();
+                break;
+
+            case 19:
+                if (!(gEwramData->unk_60.unk_4CC_0) && (gEwramData->unk_60.unk_33C[3] & 0x40000))
+                {
+                    gUnk_03002CB0.dispCnt &= ~DCNT_BG2;
+                }
+                sub_0803FBBC(bgNum, sp2C, sp30);
+                break;
+
+            case 20:
+                temp_r6 = gEwramData->unk_60.unk_4C8;
+                var_r4 = (s16*)&gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+                HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, REG_BG3HOFS);
+
+                for (var_r1 = 0; var_r1 < 0x80; var_r1++)
+                {
+                    *var_r4++ = 0;
+                }
+
+                for (var_r1 = 0; var_r1 < 8; var_r1++)
+                {
+                    *var_r4++ = temp_r6;
+                }
+
+                for (var_r1 = 0; var_r1 < 8; var_r1++)
+                {
+                    *var_r4++ = (temp_r6 * 3) >> 1;
+                }
+
+                for (var_r1 = 0; var_r1 < 0x14; var_r1++)
+                {
+                    *var_r4++ = temp_r6 * 2;
+                }
+
+                gEwramData->hBlankEffect.requestStart = 1;
+                break;
+
+            case 21:
+                if (gEwramData->unk_60.unk_33C[3] & 0x02000000)
+                {
+                    src.texX = 0x8000;
+                    src.texY = 0x8000;
+                    src.scrX = 0x70;
+                    src.scrY = 0x38;
+                    src.sx = 0x80;
+                    src.sy = 0x80;
+                    src.alpha = -gEwramData->unk_60.unk_4C8 << 9;
+                    BgAffineSet(&src, (struct BgAffineDstData *) &gDisplayRegisters.bg2PA, 1);
+                }
+                else
+                {
+                    gUnk_03002CB0.dispCnt &= ~DCNT_BG2;
+                }
+                break;
+
+            case 23:
+                sub_0803FBBC(bgNum, sub_0800D288_inline_0(temp_r7_2->unk_14, sp28->unk_14, sp2C, 0xF0, 0xF0), sp30);
+                sub_0800CB8C(bgNum, (s32)(SCREEN_SIZE_Y * 0.7f), (s32)(SCREEN_SIZE_Y * 0.3f), 3);
+                break;
+
+            case 24:
+                sub_0803FBBC(bgNum, sp2C, sp30);
+                sub_0800CC90(bgNum, 0xB0, 0x200, 1);
+                break;
+
+            case 25:
+                sub_0800CC90(bgNum, 0x70, 0x100, 1);
+                break;
+
+            case 26:
+                sub_0803FBBC(bgNum, sp2C, sp30);
+                break;
+
+            case 27:
+                temp_r5 = gEwramData->unk_60.unk_4C8;
+                src1.texX = 0x8000;
+                src1.texY = 0x8000;
+                src1.scrX = 0x100 - sp28->xPos.part16.integer;
+                src1.scrY = 0x100 - sp28->yPos.part16.integer;
+                src1.sy = src1.sx = ((sub_080009E4(temp_r5 * 0x10) * 3) >> 0xD) + 0x58;
+                src1.alpha = -temp_r5 << 7;
+                BgAffineSet(&src1, (struct BgAffineDstData *) &gDisplayRegisters.bg2PA, 1);
+                break;
+
+            case 28:
+                sub_0800CED4(bgNum, 0x38, 0x90);
+                break;
+
+            case 29:
+                sub_0800CED4(bgNum, 0x70, 0xCC);
+                break;
+
+            case 30:
+                sp34 = 1;
+                temp_sb = gEwramData->unk_60.unk_4C8;
+                sp38 = &gDisplayRegisters.bgOfs[bgNum].vOfs;
+                var_r4_2 = (s16*)&gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+                HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0VOFS + bgNum);
+
+                sp34 = 0xD;
+                temp_sb <<= 0xA;
+                var_r1_5 = 0xB;
+                for (var_r6 = 0; var_r6 < SCREEN_SIZE_Y; var_r6++)
+                {
+                    *var_r4_2++ = (sub_080009E4((var_r6 << var_r1_5) + temp_sb) >> sp34) + *sp38;
+                }
+
+                gEwramData->hBlankEffect.requestStart = 1;
+                temp_r7_2->xPos.whole += sp2C;
+                temp_r3->hOfs = temp_r7_2->xPos.part16.integer;
+                break;
+
+            case 31:
+                sub_0803FBBC(bgNum, sp2C, sp30);
+                var_r6_2 = (s16*)&gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+                var_0 = &gDisplayRegisters.bgOfs[bgNum].hOfs;
+                HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0HOFS + bgNum);
+
+                temp_r2_2 = sub_080009E4(gEwramData->frameCounter << 8) >> 0xF;
+                for (var_r1_6 = 0; var_r1_6 < SCREEN_SIZE_Y; var_r1_6++)
+                {
+                    *var_r6_2++ = *var_0 + temp_r2_2;
+                }
+
+                gEwramData->hBlankEffect.requestStart = 1;
+                break;
+
+            case 32:
+                var_r7 = 0x78;
+                var_r6_3 = 0x50;
+                var_r2_2 = 1;
+                
+                switch (GetRoomFromMapPosition(GetEntityRoomXPositionInteger(gEwramData->unk_13110.unk_13110), GetEntityRoomYPositionInteger(gEwramData->unk_13110.unk_13110)))
+                {
+                    case 0:
+                        var_r7 = 0xD0;
+                        var_r6_3 = 0x30;
+                        var_r2_2 = 1;
+                        break;
+
+                    case 16:
+                        var_r7 = 0x78;
+                        var_r6_3 = 0x78;
+                        var_r2_2 = 1;
+                        break;
+
+                    case 33:
+                        var_r7 = 0x20;
+                        var_r6_3 = 0x68;
+                        var_r2_2 = -1;
+                        break;
+
+                    case 34:
+                        var_r7 = 0x20;
+                        var_r6_3 = 0x50;
+                        var_r2_2 = -1;
+                        break;
+
+                    case 35:
+                        var_r7 = 0x20;
+                        var_r6_3 = 0x50;
+                        var_r2_2 = -1;
+                        break;
+
+                    case 39:
+                        var_r7 = 0x20;
+                        var_r6_3 = 0x10;
+                        var_r2_2 = -1;
+                        break;
+                }
+                sub_0800D0F8(var_r7, var_r6_3, var_r2_2);
+                break;
+
+            case 36:
+                sub_0803FBBC(bgNum, sp2C, sp30);
+                temp_sl = gEwramData->unk_60.unk_4C8;
+                var_1 = &gDisplayRegisters.bgOfs[bgNum].vOfs;
+                var_r4_2 = (s16*)&gEwramData->hBlankEffect.hBlankBuffer[1 - gEwramData->hBlankEffect.currentBuffer];
+                HBlankEffectSetup(0, SCREEN_SIZE_Y, 2, (struct BgOffset *)REG_BG0VOFS + bgNum);
+
+                var_r2_3 = 0xE;
+                temp_sl <<= 0xA;
+                var_r1_7 = 0xC;
+                for (var_r6_4 = 0; var_r6_4 < 160; var_r6_4++)
+                {
+                    *var_r4_2++ = (sub_080009E4((var_r6_4 << var_r1_7) + temp_sl) >> var_r2_3) + *var_1;
+                }
+
+                gEwramData->hBlankEffect.requestStart = 1;
+                break;
+        }
+    }
+}
+
+/**
+ * @brief DA50 | To document
+ * 
+ */
+void sub_0800DA50(void)
+{
+    struct EwramData_unk1325C *unk_1325c;
+    struct EwramData_unk60 *unk_60;
+
+    DMA_FILL_32(3, 0, 0x0600E000, 0x800);
+    DMA_FILL_32(3, 0, 0x06000000, 0x20);
+
+    gDisplayRegisters.bgCnt[0] = CREATE_BGCNT(0, 28, BGCNT_HIGH_PRIORITY, BGCNT_SIZE_256x256);
+    gDisplayRegisters.bgOfs[0].hOfs = 0;
+    gDisplayRegisters.bgOfs[0].vOfs = 6;
+
+    sub_080412DC(VRAM_BASE + 0x5000);
+    sub_08040970(0, 0, 0x1A, 1);
+    sub_080412F0(0xF);
+    sub_08041304(1);
+    sub_0803FD9C((u8 *)0x0827B208, VRAM_BASE + 0x4000, 0);
+
+    DMA_FILL_32(3, 0, 0x06005800, 0x1954);
+    DMA_FILL_32(3, 0, 0x06005000, 0x2000);
+
+    sub_0803C918((u8 *)0x0820C428, 0, 2, 0xD);
+    sub_0800DB78();
+
+    unk_1325c = &gEwramData->unk_1325C;
+    unk_60 = &gEwramData->unk_60;
+
+    unk_60->unk_404 = unk_1325c->currentHP;
+    unk_60->unk_406 = unk_1325c->currentMP;
+    unk_60->unk_408 = unk_1325c->maxHP;
+    unk_60->unk_40A = unk_1325c->maxMP;
+
+    sub_0800F138(4, 1, unk_60->unk_404, unk_1325c->maxHP, 0);
+    sub_0800F138(4, 2, unk_60->unk_406, unk_1325c->maxMP, 1);
+}
+
+struct Unk_080E0F74 {
+    s32 unk_0;
+    s32 unk_4;
+    s32 unk_8;
+    s32 unk_C;
+    s32 unk_10;
+    s32 unk_14;
+};
+
+const struct Unk_080E0F74 sUnk_080E0F74[2] = {
+    [0] = {
+        .unk_0 = 0,
+        .unk_4 = 0,
+        .unk_8 = 9,
+        .unk_C = 0,
+        .unk_10 = 4,
+        .unk_14 = 5
+    },
+    [1] = {
+        .unk_0 = 12,
+        .unk_4 = 0,
+        .unk_8 = 13,
+        .unk_C = 0,
+        .unk_10 = 2,
+        .unk_14 = 4
+    }
+};
+
+// #define VRAM_E000 ((u16 (*)[0x20])(VRAM_BASE + 0xE000))
+
+/**
+ * @brief DB78 | To document
+ * 
+ */
+void sub_0800DB78(void)
+{
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 var_0;
+    s32 var_1;
+    s32 var_2;
+    s32 var_3;
+    s32 palette = 0xD;
+    struct Unk_080E0F74 unk_080E0F74[2];
+
+    memcpy(unk_080E0F74, sUnk_080E0F74, sizeof(unk_080E0F74));
+
+    for (i = 0; i < 2; i++)
+    {
+        var_0 = unk_080E0F74[i].unk_0;
+        var_1 = unk_080E0F74[i].unk_4;
+        var_2 = unk_080E0F74[i].unk_8;
+        var_3 = unk_080E0F74[i].unk_C;
+        for (j = 0; j < unk_080E0F74[i].unk_14; j++, var_1++)
+        {
+            for (k = 0; k < unk_080E0F74[i].unk_10; k++, var_0++)
+            {
+                *((u16*)(VRAM_BASE + 0xE000) + var_0 + var_1 * 0x20) = (0x200 + k + var_2 + (var_3 + j) * 0x10) | (palette << 12);
+                // VRAM_E000[var_1][var_0] = (0x200 + k + var_2 + (var_3 + j) * 0x10) | (palette << 12);
+            }
+            var_0 = unk_080E0F74[i].unk_0;
+        }
+    }
+}
+
+static inline void sub_0800DC70_inline_0(s32 param_0, s32 param_1, s32 param_2, s32 param_3, s32 param_4)
+{
+    s32 var_r1;
+    u16 *var_r2;
+    s32 var_r3;
+    s32 var_r7;
+    s32 palette;
+
+    palette = 0xD;
+    if (param_4 == 0)
+    {
+        var_r7 = 0x200;
+    }
+    else
+    {
+        var_r7 = 0x210;
+    }
+
+    if (param_2 > 0)
+    {
+        var_r3 = Div(Div(param_2 * 100, param_3) << 6, 100);
+        if (var_r3 == 0)
+        {
+            var_r3 = 1;
+        }
+    }
+    else
+    {
+        var_r3 = 0;
+    }
+
+    var_r2 = (u16*)(0x0600E000 + (param_0 * 2) + (param_1 << 6));
+    for (var_r1 = 0; var_r1 < 8; var_r1++)
+    {
+        if (var_r1 == var_r3 / 8)
+        {
+            *var_r2 = (var_r7 + (var_r3 - (var_r1 * 8))) | (palette << 12);
+        }
+        else
+        {
+            if (var_r3 >= (( var_r1 + 1) * 8))
+            {
+                *var_r2 = (var_r7 + 8) | (palette << 12);
+            }
+            else
+            {
+                *var_r2 = (var_r7) | (palette << 12);
+            }
+        }
+        var_r2 += 1;
+    }
+}
+
+// fakematch: https://decomp.me/scratch/6f0Up
+void sub_0800DC70(struct EwramData_unk60 *param_0)
+{
+    s16 *temp_r4;
+    s16 *temp_r4_2;
+    s32 temp_r0_4;
+    s32 temp_r2_3;
+    s32 var_r3;
+    s32 var_r5;
+    s32 var_r5_2;
+    struct EwramData_unk1325C *temp_r7;
+    s16 *temp_r6;
+    s16 *temp_r6_2;
+    s32 var_sl;
+    s32 temp_r2;
+    s32 temp_r0_2;
+    s16 var_0;
+
+    temp_r7 = &gEwramData->unk_1325C;
+
+    var_r3 = 0;
+    var_sl = 2;
+    temp_r4 = &param_0->unk_404;
+    temp_r6 = &param_0->unk_408;
+
+    #ifndef NON_MATCHING
+    asm("":::"r5");
+    #endif
+    for (var_r5 = 0; var_r5 < var_sl; var_r5++)
+    {
+        if (*temp_r4 != temp_r7->currentHP)
+        {
+            temp_r2 = *temp_r4;
+            var_0 = temp_r7->currentHP;
+            if (*temp_r4 < var_0)
+            {
+                *temp_r4 = temp_r2 + 1;
+                var_r3 = 1;
+            }
+            else
+            {
+                *temp_r4 = temp_r2 - 1;
+                var_r3 = 1;
+            }
+        }
+
+        if (*temp_r6 != temp_r7->maxHP)
+        {
+            temp_r0_2 = *temp_r6;
+            if (*temp_r6 < temp_r7->maxHP)
+            {
+                *temp_r6 = temp_r0_2 + 1;
+                var_r3 = 1;
+            }
+            else
+            {
+                *temp_r6 = temp_r0_2 - 1;
+                var_r3 = 1;
+            }
+        }
+    }
+
+    if (var_r3 != 0)
+    {
+        sub_0800DC70_inline_0(4, 1, param_0->unk_404, param_0->unk_408, 0);
+    }
+
+    var_r3 = 0;
+    if (var_r3 < var_sl)
+    {
+        #ifndef NON_MATCHING
+        asm("":::"r4");
+        #endif
+        temp_r4_2 = &param_0->unk_406;
+        temp_r6_2 = &param_0->unk_40A;
+        for (var_r5_2 = 0; var_r5_2 < var_sl; var_r5_2++)
+        {
+            if (*temp_r4_2 != temp_r7->currentMP)
+            {
+                temp_r2_3 = *temp_r4_2;
+                var_0 = temp_r7->currentMP;
+                if (*temp_r4_2 < var_0)
+                {
+                    *temp_r4_2 = temp_r2_3 + 1;
+                    var_r3 = 1;
+                }
+                else
+                {
+                    *temp_r4_2 = temp_r2_3 - 1;
+                    var_r3 = 1;
+                }
+            }
+            
+            if (*temp_r6_2 != temp_r7->maxMP)
+            {
+                temp_r0_4 = *temp_r6_2;
+                if (*temp_r6_2 < temp_r7->maxMP)
+                {
+                    *temp_r6_2 = temp_r0_4 + 1;
+                    var_r3 = 1;
+                }
+                else
+                {
+                    *temp_r6_2 = temp_r0_4 - 1;
+                    var_r3 = 1;
+                }
+            }
+        }
+    }
+
+    if (var_r3 != 0)
+    {
+        sub_0800DC70_inline_0(4, 2, param_0->unk_406, param_0->unk_40A, 1);
+    }
+}
+
+/**
+ * @brief DE4C | To document
+ * 
+ * @param param_0 To document
+ */
+void sub_0800DE4C(s32 param_0)
+{
+    u16 *var_r4_6;
+    u8* temp_r4;
+    s32 temp_r4_2;
+    s32 var_r3;
+    struct EwramData_unk60 *temp_r6;
+    u8 temp_r8;
+    s32 var_0;
+    s32 var_1;
+
+    temp_r6 = &gEwramData->unk_60;
+    temp_r8 = gEwramData->unk_60.unk_424;
+
+    temp_r4 = sub_08041434(param_0);
+    sub_08041304(1);
+    sub_0804090C(0, 0);
+
+    if (temp_r8 == 0)
+    {
+        sub_08040970(0, 0, 0x14, 1);
+        sub_08040898(0, 0);
+    }
+    else
+    {
+        sub_08040970(0, 1, 0x14, 1);
+        sub_08040898(0, 1);
+    }
+
+    var_0 = 0x12;
+    sub_08041338((struct unk_08506B38 *) temp_r4, 0);
+    temp_r4_2 = (sub_0804136C() + 7) >> 3;
+    sub_08041338((struct unk_08506B38 *) sub_08041434(0x35E), 0);
+    var_1 = temp_r4_2;
+    var_r4_6 = (u16*)&gEwramData->unk_133F4;
+
+    if (gEwramData->unk_60.unk_42C & 0x03000200)
+    {
+        temp_r6->unk_423 = 0;
+        return;
+    }
+    sub_0800EB04();
+
+    for (var_r3 = 0x1A - var_1; var_r3 > 0; var_r3--)
+    {
+        *var_r4_6++ = 0;
+    }
+
+    *var_r4_6++ = 0xE220;
+    *var_r4_6++ = 0xE221;
+    *var_r4_6++ = 0xE222;
+
+    for (var_r3 = var_1 - 2; var_r3 > 0; var_r3--)
+    {
+        *var_r4_6++ = 0xE223;
+    }
+
+    *var_r4_6++ = 0xE622;
+    *var_r4_6++ = 0xE621;
+    *var_r4_6++ = 0xE620;
+
+    for (var_r3 = 0x1C - var_1; var_r3 > 0; var_r3--)
+    {
+        *var_r4_6++ = 0;
+    }
+
+    *var_r4_6++ = 0xE230;
+    *var_r4_6++ = 0xE231;
+
+    for (var_r3 = 0; var_r3 < var_1; var_r3++)
+    {
+        *var_r4_6++ = (var_r3 + (temp_r8 << 5) + 0x80) | 0xE200;
+    }
+
+    *var_r4_6++ = 0xE631;
+    *var_r4_6++ = 0xE630;
+
+    for (var_r3 = 0x1C - var_1; var_r3 > 0; var_r3--)
+    {
+        *var_r4_6++ = 0;
+    }
+
+    *var_r4_6++ = 0xE240;
+    *var_r4_6++ = 0xE241;
+    *var_r4_6++ = 0xE242;
+
+    for (var_r3 = var_1 - 2; var_r3 > 0; var_r3--)
+    {
+        *var_r4_6++ = 0xE243;
+    }
+
+    *var_r4_6++ = 0xE642;
+    *var_r4_6++ = 0xE641;
+    *var_r4_6++ = 0xE640;
+
+    if (DmaQueue_DirectCopy(0xC0, (u32 *)gEwramData->unk_133F4, (u32 *)(VRAM_BASE + 0xE000 + var_0 * 0x40)) != NULL)
+    {
+        sub_0803C918((u8 *)0x0820C428, 5, 1, 0xE);
+        sub_0803C918((u8 *)0x081183F4, 1, 1, 0xF);
+
+        temp_r6->unk_422 = 0xF0;
+        temp_r6->unk_423 = 0;
+        temp_r6->unk_424 = 1 - temp_r6->unk_424;
+    }
+    else
+    {
+        temp_r6->unk_423 = 2;
+    }
+    temp_r6->unk_420 = param_0;
+}
+
+/**
+ * @brief E0E8 | To document
+ * 
+ * @param param_0 To document
+ */
+void sub_0800E0E8(s32 param_0)
+{
+    u8 *temp_r4;
+    s32 temp_r4_2;
+    s32 var_r3;
+    struct EwramData_unk60 *temp_r6;
+    u16 *temp_r5;
+    u8 temp_r7;
+    s32 var_0;
+    s32 var_1;
+    s32 var_2;
+
+    temp_r6 = &gEwramData->unk_60;
+    temp_r7 = gEwramData->unk_60.unk_424;
+    temp_r5 = (u16*)&gEwramData->unk_133F4;
+    var_0 = 4;
+    if (gEwramData->unk_60.unk_42C & 0x03000200)
+    {
+        gEwramData->unk_60.unk_423 = 0;
+        return;
+    }
+    temp_r4 = sub_08041434(param_0);
+    sub_08041304(1);
+    sub_0804090C(0, 0);
+    if (temp_r7 == 0)
+    {
+        sub_08040970(0, 0, 0x14, 1);
+        sub_08040898(0, 0);
+    }
+    else
+    {
+        sub_08040970(0, 1, 0x14, 1);
+        sub_08040898(0, 1);
+    }
+    var_1 = 0x12;
+    sub_08041338((struct unk_08506B38 *) temp_r4, 0);
+    temp_r4_2 = (sub_0804136C() + 7) >> 3;
+    sub_08041338((struct unk_08506B38 *) sub_08041434(0x35E), 0);
+    var_2 = temp_r4_2;
+    sub_0801093C(&gEwramData->unk_60);
+    sub_0800EB04();
+
+    *temp_r5++ = 0xE220;
+    if (var_0 == 4)
+    {
+        *temp_r5++ = 0xE221;
+        *temp_r5++ = 0xE222;
+    }
+    else
+    {
+        *temp_r5++ = 0xE234;
+        *temp_r5++ = 0xE235;
+    }
+
+    for (var_r3 = var_2 - 2; var_r3 > 0; var_r3--)
+    {
+        *temp_r5++ = 0xE223;
+    }
+
+    *temp_r5++ = 0xE622;
+    *temp_r5++ = 0xE621;
+    *temp_r5++ = 0xE620;
+
+    for (var_r3 = 0x1C - var_2; var_r3 > 0; var_r3--)
+    {
+        *temp_r5++ = 0;
+    }
+
+    *temp_r5++ = 0xE230;
+    *temp_r5++ = 0xE231;
+
+    for (var_r3 = 0; var_r3 < var_2; var_r3++)
+    {
+        *temp_r5++ = (var_r3 + (temp_r7 << 5) + 0x80) | 0xE200;
+    }
+
+    *temp_r5++ = 0xE631;
+    *temp_r5++ = 0xE630;
+
+    for (var_r3 = 0x1C - var_2; var_r3 > 0; var_r3--)
+    {
+        *temp_r5++ = 0;
+    }
+
+    *temp_r5++ = 0xE240;
+    if (var_0 == 4)
+    {
+        *temp_r5++ = 0xE241;
+        *temp_r5++ = 0xE242;
+    }
+    else
+    {
+        *temp_r5++ = 0xE254;
+        *temp_r5++ = 0xE255;
+    }
+
+    for (var_r3 = (var_2 - 2); var_r3 > 0; var_r3--)
+    {
+        *temp_r5++ = 0xE243;
+    }
+
+    *temp_r5++ = 0xE642;
+    *temp_r5++ = 0xE641;
+    *temp_r5++ = 0xE640;
+
+    if (DmaQueue_DirectCopy(0xC0, (u32 *)gEwramData->unk_133F4, (u32 *)(VRAM_BASE + 0xE000 + var_1 * 0x40)) != NULL)
+    {
+        sub_0803C918((u8 *)0x0820C428, var_0, 1, 0xE);
+        sub_0803C918((u8 *)0x081183F4, 1, 1, 0xF);
+
+        temp_r6->unk_422 = 0xF0;
+        temp_r6->unk_423 = 0;
+        temp_r6->unk_424 = 1 - temp_r6->unk_424;
+    }
+    else
+    {
+        temp_r6->unk_423 = 1;
+    }
+    temp_r6->unk_420 = param_0;
+}
+
+// #define VRAM_5C00 ((u32 (*)[0x10][8])(VRAM_BASE + 0x5C00))
+
+/**
+ * @brief E380 | To document
+ * 
+ */
+void sub_0800E380(void)
+{
+    s32 var_r0;
+    s32 var_r1;
+    s32 var_r2;
+    s32 var_r5;
+    s32 var_0;
+
+    var_0 = 2;
+    var_r5 = 0;
+
+    for (var_r2 = 0; var_r2 < 8; var_r2++)
+    {
+        var_r5 |= var_0 << (var_r2 * 4);
+    }
+
+    for (var_r0 = 0; var_r0 < 5; var_r0++)
+    {
+        for (var_r1 = 0; var_r1 < 0x1E; var_r1++)
+        {
+            for (var_r2 = 0; var_r2 < 8; var_r2++)
+            {
+                *(u32*)((u32*)0x06005C00 + (var_r0 << 7) + (var_r1 << 3) + 1 * var_r2) = var_r5;
+                // VRAM_5C00[var_r0][var_r1][var_r2] = var_r5;
+            }
+        }
+    }
+
+    for (var_r2 = 0; var_r2 < 8; var_r2++)
+    {
+        if (var_r2 == 0)
+        {
+            *(s32* )0x06005600 = -1;
+        }
+        else
+        {
+            *((u32* )0x06005600 + var_r2) = var_r5;
+        }
+    }
+
+    for (var_r2 = 0; var_r2 < 8; var_r2++)
+    {
+        if (var_r2 == 7)
+        {
+            *((u32* )0x06005620 + var_r2) = -1;
+        }
+        else
+        {
+            *((u32* )0x06005620 + var_r2) = var_r5;
+        }
+    }
+}
+
+static inline s32 sub_0800E40C_inline_0()
+{
+    s32 res;
+    res = 1;
+    if ((gEwramData->unk_60.unk_42C & 1) && (gEwramData->unk_13110.unk_13110->unk_528.unk_528_16.unk_52A > 0x70))
+        res = 0;
+    return res;
+}
+
+/**
+ * @brief E40C | To document
+ * 
+ */
+void sub_0800E40C(void)
+{
+    s32 var_r7;
+    u8 *temp_r0;
+    s32 var_1;
+    u16 *var_2;
+
+    temp_r0 = gEwramData->unk_133F4;
+    var_1 = 0x1C;
+    
+    if (sub_0800E40C_inline_0() != 0)
+    {
+        var_r7 = 0x11;
+    }
+    else
+    {
+        var_r7 = 8;
+    }
+
+    if (!(gEwramData->unk_60.unk_42C & 0x01000000))
+    {
+        var_2 = ((u16*)gEwramData->unk_133F4);
+        *var_2 = 0xF228;
+        DmaQueue_DirectCopy(2, (u32 *)temp_r0, (u32 *) (VRAM_BASE + 0xE000 + (var_1 * 2) + (var_r7 * 0x40)));
+        var_r7++;
+
+        var_2 = ((u16*)gEwramData->unk_133F4);
+        *var_2 = 0xF238;
+        DmaQueue_DirectCopy(2, (u32 *)temp_r0, (u32 *) (VRAM_BASE + 0xE000 + (var_1 * 2) + (var_r7 * 0x40)));
+    }
+    else
+    {
+        var_2 = ((u16*)gEwramData->unk_133F4);
+        *var_2 = (gEwramData->unk_60.inGameTimer & 8) ? 0xF226 : 0xF227;
+        DmaQueue_DirectCopy(2, (u32 *)temp_r0, (u32 *) (VRAM_BASE + 0xE000 + (var_1 * 2) + (var_r7 * 0x40)));
+        var_r7++;
+
+        var_2 = ((u16*)gEwramData->unk_133F4);
+        *var_2 = (gEwramData->unk_60.inGameTimer & 8) ? 0xF236 : 0xF237;
+        DmaQueue_DirectCopy(2, (u32 *)temp_r0, (u32 *) (VRAM_BASE + 0xE000 + (var_1 * 2) + (var_r7 * 0x40)));
+    }
+}
+
+/**
+ * @brief 3540 | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ */
+void sub_0800E540(s32 param_0, s32 param_1)
+{
+    s32 var_r1_2;
+    s32 var_r2;
+    s32 var_r1;
+    s32 var_r6;
+    u8 *temp_sb;
+    u16 *var_r3_2;
+    s32 var_0;
+    s32 var_2;
+    s32 var_3;
+    s32 var_5;
+    s32 var_7;
+    s32 var_8;
+
+    var_7 = 7;
+    var_8 = 2;
+    var_5 = 0;
+
+    var_r6 = 0x361;
+    gEwramData->unk_60.unk_42C |= 0x01000000;
+    sub_0803C918((u8 *)0x0820C428, 7, 1, 0xF);
+
+    if (param_1 != 0)
+    {
+        switch (param_0)
+        {
+            case 0:
+                var_r6 = 0x1E4;
+                break;
+            case 1:
+                var_r6 = 0x21C;
+                break;
+            case 2:
+                var_r6 = 0x234;
+                break;
+            case 3:
+                var_r6 = 0x257;
+                break;
+        }
+        var_r6 -= 1 - param_1;
+    }
+
+    sub_080412F0(0xF);
+    sub_08041304(2);
+    sub_08040748(var_7, var_8, 0x1E, 2);
+    sub_0804066C(0, 2);
+    sub_08040FE0();
+    sub_0800E380();
+    sub_08046BC8(var_r6);
+    sub_0804066C(var_7, var_8);
+    sub_08041304(1);
+
+    var_0 = 0x1E;
+    temp_sb = gEwramData->unk_133F4;
+    
+    if (sub_0800E40C_inline_0() == 0)
+    {
+        var_r2 = 7;
+    }
+    else
+    {
+        var_r2 = 0x10;
+    }
+
+    var_2 = var_r2;
+    for (var_r1 = 0; var_r1 < 3; var_r1++)
+    {
+        var_r3_2 = (u16*)&gEwramData->unk_133F4;
+        var_3 = var_r2;
+        for (var_r1_2 = 0; var_r1_2 < var_0; var_r1_2++)
+        {
+            *var_r3_2++ = var_r1_2 + (var_r1 << 5) + 0xE2E0;
+        }
+
+        DmaQueue_DirectCopy(var_0 << 1, (u32 *)temp_sb, (u32 *) (VRAM_BASE + 0xE000 + (var_5 * 2) + (var_3 * 0x40)));
+        var_r2++;
+    }
+
+    var_r3_2 = (u16*)&gEwramData->unk_133F4;
+    var_3 = var_2 - 1;
+    for (var_r1_2 = 0; var_r1_2 < var_0; var_r1_2++)
+    {
+        *var_r3_2++ = 0xE2B0;
+    }
+    DmaQueue_DirectCopy(var_0 << 1, (u32 *)temp_sb, (u32 *) (VRAM_BASE + 0xE000 + (var_5 * 2) + (var_3 * 0x40)));
+
+    var_r3_2 = (u16*)&gEwramData->unk_133F4;
+    var_3 = var_2 + 3;
+    for (var_r1_2 = 0; var_r1_2 < var_0; var_r1_2++)
+    {
+        *var_r3_2++ = 0xE2B1;
+    }
+    DmaQueue_DirectCopy(var_0 << 1, (u32 *)temp_sb, (u32 *) (VRAM_BASE + 0xE000 + (var_5 * 2) + (var_3 * 0x40)));
+}
+
+// (94.64%) https://decomp.me/scratch/iF3mv
+void sub_0800E708(s32 arg0, s32 arg1, s32 arg2)
+{
+    struct EwramData_unk60 *sp4;
+    s32 sp8;
+    u8 *spC;
+    s32 sp10;
+    s32 sp14;
+    u8 *temp_r4;
+    s32 temp_r4_2;
+    s32 var_r1;
+    s32 var_r1_2;
+    s32 var_r7;
+    u16 *var_r3_2;
+    s32 var_0;
+    s32 var_1;
+    s32 var_2;
+    s32 var_3;
+    s32 var_4;
+    s32 var_5;
+    s32 var_6;
+
+    sp4 = &gEwramData->unk_60;
+    sp8 = gEwramData->unk_60.unk_424;
+    spC = gEwramData->unk_133F4;
+    sp10 = 4;
+    sp14 = arg0;
+
+    switch (arg1)
+    {
+        case 0:
+            sp10 = 1;
+            arg0 += 0xE3;
+            break;
+        case 1:
+            sp10 = 2;
+            arg0 += 0x11B;
+            break;
+        case 2:
+            sp10 = 3;
+            arg0 += 0x133;
+            break;
+        case 3:
+            sp10 = 6;
+            arg0 += 0x156;
+            break;
+    }
+
+    if (gEwramData->unk_60.unk_42C & 0x200)
+    {
+        return;
+    }
+    if ((arg2 == 0) && (gEwramData->unk_60.unk_42C & 0x02000000))
+    {
+        return;
+    }
+
+    sub_0800EB04();
+    temp_r4 = sub_08041434(arg0);
+    sub_08041304(1);
+    sub_0804090C(0, 0);
+    if (sp8 == 0)
+    {
+        sub_08040970(0, 0, 0x14, 1);
+        sub_08040898(0, 0);
+    }
+    else
+    {
+        sub_08040970(0, 1, 0x14, 1);
+        sub_08040898(0, 1);
+    }
+    sub_08041338((struct unk_08506B38 *) temp_r4, 0);
+    temp_r4_2 = (sub_0804136C() + 7) >> 3;
+    sub_08041338((struct unk_08506B38 *) sub_08041434(0x35E), 0);
+    var_0 = temp_r4_2;
+
+    if (arg2 != 0)
+    {
+        var_r7 = 0xF - ((var_0 + 4) >> 1);
+        
+        if (sub_0800E40C_inline_0() != 0)
+        {
+            var_r1 = 0xC;
+        }
+        else
+        {
+            var_r1 = 3;
+        }
+    }
+    else
+    {
+        var_r7 = 0x1A - var_0;
+        var_r1 = 1;
+    }
+    var_1 = var_r7;
+    var_6 = var_r1;
+
+    var_r3_2 = (u16*)&gEwramData->unk_133F4[0];
+    *var_r3_2++ = 0xE220;
+    *var_r3_2++ = 0xE234;
+    *var_r3_2++ = 0xE235;
+    for (var_r1_2 = var_0 - 2; var_r1_2 > 0; var_r1_2--)
+    {
+        *var_r3_2++ = 0xE223;
+    }
+    *var_r3_2++ = 0xE622;
+    *var_r3_2++ = 0xE621;
+    *var_r3_2++ = 0xE620;
+    DmaQueue_DirectCopy((var_0 + 4) << 1, (u32 *)spC, (u32 *) (VRAM_BASE + 0xE000 + (var_1 * 2) + (var_6 * 0x40)));
+    var_2 = var_r7;
+
+    var_r3_2 = (u16*)&gEwramData->unk_133F4[0];
+    *var_r3_2++ = 0xE230;
+    *var_r3_2++ = 0xE231;
+    for (var_r1_2 = 0; var_r1_2 < var_0; var_r1_2++)
+    {
+        *var_r3_2++ = (var_r1_2 + (sp8 << 5) + 0x80) | 0xE200;
+    }
+    *var_r3_2++ = 0xE631;
+    *var_r3_2++ = 0xE630;
+    DmaQueue_DirectCopy((var_0 + 4) << 1, (u32 *)spC, (u32 *) (VRAM_BASE + 0xE000 + (var_2 * 2) + ((var_r1 + 1) * 0x40)));
+    var_5 = var_r7;
+    var_3 = var_r1 + 2;
+
+    var_r3_2 = (u16*)&gEwramData->unk_133F4[0];
+    *var_r3_2++ = 0xE240;
+    *var_r3_2++ = 0xE254;
+    *var_r3_2++ = 0xE255;
+    for (var_r1_2 = var_0 - 2; var_r1_2 > 0; var_r1_2--)
+    {
+        *var_r3_2++ = 0xE243;
+    }
+    *var_r3_2++ = 0xE642;
+    *var_r3_2++ = 0xE641;
+    *var_r3_2++ = 0xE640;
+    DmaQueue_DirectCopy((var_0 + 4) << 1, (u32 *)spC, (u32 *) (VRAM_BASE + 0xE000 + (var_5 * 2) + ((var_3) * 0x40)));
+
+    sub_0803C918((u8 *)0x0820C428, sp10, 1, 0xE);
+    sub_0803C918((u8 *)0x081183F4, 1, 1, 0xF);
+    if (arg2 != 0)
+    {
+        sub_0800E540(arg1, sp14 + 1);
+        sp4->unk_422 = 2;
+    }
+    else
+    {
+        sp4->unk_422 = 0xF0;
+    }
+
+    sp4->unk_423 = 0;
+    sp4->unk_424 = 1 - sp4->unk_424;
+    sp4->unk_420 = arg0;
+}
+
+extern u16 sUnk_080EA628[];
+
+/**
+ * @brief EA98 | To document
+ * 
+ * @param param_0 To document
+ */
+void sub_0800EA98(struct Unk_sub_0800EA98 *param_0)
+{
+    u16 var_0;
+    struct EwramData_unk60 *unk_60;
+
+    if (!(param_0->unk_3E & 1))
+    {
+        sub_0801093C(&gEwramData->unk_60);
+        var_0 = sUnk_080EA628[param_0->unk_36];
+        unk_60 = &gEwramData->unk_60;
+        if (!(unk_60->unk_42C & 0x03000200))
+        {
+            unk_60->unk_423 = 2;
+            unk_60->unk_420 = var_0;
+        }
+        param_0->unk_3E |= 1;
+    }
+}
+
+/**
+ * @brief EB04 | To document
+ * 
+ */
+void sub_0800EB04(void)
+{
+    s32 var_r4;
+    s32 var_r5;
+    s32 var_r5_2;
+    struct EwramData_unk60 *temp_r8;
+    u8 *temp_r6;
+    u32 var_0;
+    u32 var_1;
+    temp_r8 = &gEwramData->unk_60;
+    temp_r6 = gEwramData->unk_133F4;
+
+    if (!(gEwramData->unk_60.unk_42C & 0x02000000))
+    {
+        gEwramData->unk_60.unk_42C |= 0x02000000;
+        gEwramData->hBlankEffect.requestStop = 1;
+
+        var_0 = 0x26;
+        DMA_FILL_32(3, 0, temp_r6, var_0);
+        var_r4 = 0x0600E01A;
+        for (var_r5 = 0; var_r5 < 4; var_r5++)
+        {
+            DmaQueue_DirectCopy(var_0, (u32 *)temp_r6, (u32 *) var_r4);
+            var_r4 += 0x40;
+        }
+        var_r4 = 0;
+
+        var_r5 = 5;
+        var_1 = 0x11;
+        DMA_FILL_32(3, 0, temp_r6, var_1 * 64);
+        DmaQueue_DirectCopy(var_1 * 64, (u32 *)temp_r6, (u32 *)(VRAM_BASE + 0xE000 + var_r5 * 0x40));
+        temp_r8->unk_423 = 0;
+        temp_r8->unk_422 = 0;
+        gEwramData->unk_60.unk_42C &= ~0x01000000;
+    }
+}
+
+/**
+ * @brief EBE0 | To document
+ * 
+ */
+void sub_0800EBE0(void)
+{
+    if (gEwramData->unk_60.unk_3CC != NULL)
+    {
+        gEwramData->unk_60.unk_88 = (struct EwramData_unk88 *)gEwramData->unk_60.unk_3CC;
+        gEwramData->unk_13110.unk_13110->unk_524.unk_524_16.unk_526 = gEwramData->unk_60.unk_338;
+        gEwramData->unk_13110.unk_13110->unk_528.unk_528_16.unk_52A = gEwramData->unk_60.unk_33A;
+
+        sub_0800ECA0(gEwramData->unk_60.unk_334, gEwramData->unk_60.unk_336);
+        if (sub_08013960(&gEwramData->unk_60) == 0)
+        {
+            sub_08013C5C();
+            sub_08013CF0(0);
+            PlaySong(AUDIO_STOP);
+        }
+    }
+    else
+    {
+        sub_0800ECA0(0U, 0U);
+    }
+
+    gEwramData->hBlankEffect.requestStop = 1;
+    DMA_FILL_32(3, 0, &gEwramData->hBlankEffect.hBlankBuffer, sizeof(gEwramData->hBlankEffect.hBlankBuffer[0]));
+}
+
+/**
+ * @brief ECA0 | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ */
+void sub_0800ECA0(u16 param_0, u16 param_1)
+{
+    struct EwramData_unk88 *temp_r4;
+
+    temp_r4 = gEwramData->unk_60.unk_88;
+    gEwramData->unk_60.unk_8E_4 = 0;
+    if (temp_r4 != NULL)
+    {
+        if ((param_0 >> 8) >= temp_r4->unk_8->unk_8->unk_0)
+        {
+            param_0 = (temp_r4->unk_8->unk_8->unk_0 << 0x8) + 0xFF00;
+        }
+        if ((param_1 >> 8) >= temp_r4->unk_8->unk_8->unk_1)
+        {
+            param_1 = (temp_r4->unk_8->unk_8->unk_1 << 0x8) + 0xFF00;
+        }
+        sub_0800F9EC(temp_r4, param_0, param_1);
+        gUnk_03002CB0.dispCnt = temp_r4->unk_0;
+        gDisplayRegisters.bldCnt = temp_r4->unk_1E;
+        sub_0800C778();
+        sub_0800D288();
+    }
+    sub_0800DA50();
+}
+
+/**
+ * @brief ED24 | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ * @param param_2 To document
+ * @return s32 To document
+ */
+s32 sub_0800ED24(s32 param_0, s32 param_1, s32 param_2)
+{
+    if (gEwramData->unk_60.unk_427 > param_0)
+        return 0;
+
+    sub_0803FBBC(1, param_1, param_2);
+    sub_08000F60(1);
+    sub_0800D288();
+    return 1;
+}
+
+/**
+ * @brief ED5C | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ * @param param_2 To document
+ * @param param_3 To document
+ * @return u16 To document
+ */
+u16 sub_0800ED5C(u16 param_0, u8 param_1, u8 param_2, u16 param_3)
+{
+    struct EwramData_unkA078 *var_0;
+    s32 var_1;
+    u16 var_2;
+
+    var_2 = param_0;
+    var_0 = &gEwramData->bgInfo[1];
+
+    switch (param_1)
+    {
+        case 0:
+        case 8:
+        case 9:
+        case 10:
+        case 14:
+        case 17:
+        case 18:
+        case 20:
+        case 21:
+        case 22:
+        case 27:
+        case 28:
+        case 29:
+        case 30:
+        case 32:
+        case 33:
+        case 35:
+            var_2 = 0;
+            break;
+
+        case 5:
+        case 7:
+            var_2 *= 2;
+            break;
+
+        case 2:
+        case 4:
+            if (param_2 > 1)
+            {
+                var_2 /= 2;
+            }
+            else
+            {
+                var_2 = 0;
+            }
+            break;
+
+        case 11:
+        case 13:
+        case 15:
+        case 16:
+        case 23:
+        case 31:
+            if (param_2 > 1)
+            {
+                var_1 = var_0->unk_14;
+                var_2 = (var_2 * (param_3 - 0xF0)) / (var_1 - 0xF0);
+            }
+            else
+            {
+                var_2 = 0;
+            }
+            break;
+
+        case 36:
+            break;
+    }
+    return var_2;
+}
+
+/**
+ * @brief EE54 | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ * @param param_2 To document
+ * @param param_3 To document
+ * @return u16 To document
+ */
+u16 sub_0800EE54(u16 param_0, u8 param_1, u8 param_2, u16 param_3)
+{
+    struct EwramData_unkA078 *var_0;
+    s32 var_1;
+    u16 var_2;
+
+    var_2 = param_0;
+    var_0 = &gEwramData->bgInfo[1];
+
+    switch (param_1)
+    {
+        case 0:
+        case 8:
+        case 9:
+        case 14:
+        case 17:
+        case 18:
+        case 20:
+        case 21:
+        case 22:
+        case 27:
+        case 28:
+        case 29:
+        case 30:
+        case 32:
+        case 33:
+        case 35:
+            var_2 = 0;
+            break;
+
+        case 10:
+            var_2 = 0xFFD0;
+            break;
+
+        case 6:
+        case 7:
+            var_2 *= 2;
+            break;
+
+        case 3:
+        case 4:
+            if (param_2 > 1U)
+            {
+                var_2 /= 2;
+            }
+            else
+            {
+                var_2 = 0;
+            }
+            break;
+
+        case 12:
+        case 13:
+            if (param_2 <= 1U)
+            {
+                var_2 = 0;
+            }
+            else
+            {
+                var_1 = var_0->unk_16;
+                var_2 = (var_2 * (param_3 - 0xD0)) / (var_1 - 0xD0);
+            }
+            break;
+
+        case 15:
+        case 16:
+            var_1 = var_0->unk_16;
+            var_2 = (var_2 * (param_3 - 0xD0)) / (var_1 - 0xD0);
+            break;
+
+        case 36:
+            break;
+    }
+
+    return var_2 + 0x30;
+}
+
+/**
+ * @brief EF58 | To document
+ * 
+ */
+void sub_0800EF58(void)
+{
+    sub_080412F0(0xF);
+    sub_08041304(1);
+}
+
+/**
+ * @brief EF6C | To document
+ * 
+ */
+void sub_0800EF6C(void)
+{
+    DMA_FILL_32(3, 0, 0x06004000, 0x2000);
+}
+
+/**
+ * @brief EF94 | To document
+ * 
+ * @param param_0 To document
+ */
+void sub_0800EF94(struct EwramData_unk60 *param_0)
+{
+    // TODO: is param_0 unused or an implicit call?
+    return;
+}
+
+/**
+ * @brief EF98 | To document
+ * 
+ * @param param_0 To document
+ */
+void sub_0800EF98(s32 param_0)
+{
+    struct EwramData_unk60 *unk_60;
+
+    unk_60 = &gEwramData->unk_60;
+    if (!(unk_60->unk_42C & 0x03000200))
+    {
+        unk_60->unk_423 = 1;
+        unk_60->unk_420 = param_0;
+    }
+}
+
+/**
+ * @brief EFD4 | To document
+ * 
+ * @param param_0 To document
+ */
+void sub_0800EFD4(struct EwramData_unk60 *param_0)
+{
+    switch (param_0->unk_423)
+    {
+        case 1:
+            sub_0800E0E8(param_0->unk_420);
+            return;
+
+        case 2:
+            sub_0800DE4C(param_0->unk_420);
+            return;
+
+        case 3:
+            sub_0800EB04();
+            return;
+
+        default:
+            if (param_0->unk_422 != 0)
+            {
+                param_0->unk_422 -= 1;
+                if (param_0->unk_422 == 0)
+                {
+                    sub_0800EB04();
+                }
+            }
+            return;
+    }
+}
+
+/**
+ * @brief F038 | To document
+ * 
+ */
+void sub_0800F038(void)
+{
+    DMA_FILL_32(3, 0, 0x0600E000, 0x800);
+    gDisplayRegisters.bgCnt[0] = CREATE_BGCNT(0, 28, BGCNT_HIGH_PRIORITY, BGCNT_SIZE_256x256);
+    gDisplayRegisters.bgOfs[0].hOfs = 0;
+    gDisplayRegisters.bgOfs[0].vOfs = 6;
+    sub_080412DC(VRAM_BASE + 0x5000);
+    sub_0803FD9C((u8 *)0x0827B208, VRAM_BASE + 0x4000, 0);
+    gEwramData->unk_60.unk_42C &= ~0x200;
+}
+
+/**
+ * @brief F0AC | To document
+ * 
+ */
+void sub_0800F0AC(void)
+{
+    gDisplayRegisters.bgCnt[0] = CREATE_BGCNT(1, 28, BGCNT_HIGH_PRIORITY, BGCNT_SIZE_256x256);
+    gEwramData->unk_60.unk_42C |= 0x200;
+    sub_080412DC(VRAM_BASE + 0x4000);
+    sub_08041304(0);
+    DMA_FILL_32(3, 0, 0x06004000, 0x2000);
+    DMA_FILL_32(3, 0, 0x06006000, 0x2000);
+    DMA_FILL_32(3, 0, 0x0600E000, 0x800);
+}
+
+/**
+ * @brief F138 | To document
+ * 
+ * @param param_0 To document
+ * @param param_1 To document
+ * @param param_2 To document
+ * @param param_3 To document
+ * @param param_4 To document
+ */
+void sub_0800F138(s32 param_0, s32 param_1, s32 param_2, s32 param_3, s32 param_4)
+{
+    // TODO: sub_0800F138 is the same as sub_0800DC70_inline_0
+    s32 var_r1;
+    u16 *var_r2;
+    s32 var_r3;
+    s32 var_r7;
+    s32 palette;
+
+    palette = 0xD;
+    if (param_4 == 0)
+    {
+        var_r7 = 0x200;
+    }
+    else
+    {
+        var_r7 = 0x210;
+    }
+
+    if (param_2 > 0)
+    {
+        var_r3 = Div(Div(param_2 * 100, param_3) << 6, 100);
+        if (var_r3 == 0)
+        {
+            var_r3 = 1;
+        }
+    }
+    else
+    {
+        var_r3 = 0;
+    }
+
+    var_r2 = (u16*)(0x0600E000 + (param_0 * 2) + (param_1 << 6));
+    for (var_r1 = 0; var_r1 < 8; var_r1++)
+    {
+        if (var_r1 == var_r3 / 8)
+        {
+            *var_r2 = (var_r7 + (var_r3 - (var_r1 * 8))) | (palette << 12);
+        }
+        else
+        {
+            if (var_r3 >= ((var_r1 + 1) * 8))
+            {
+                *var_r2 = (var_r7 + 8) | (palette << 12);
+            }
+            else
+            {
+                *var_r2 = (var_r7) | (palette << 12);
+            }
+        }
+        var_r2 += 1;
+    }
+}
+
+/**
+ * @brief F1C4 | To document
+ * 
+ * @return s32 To document
+ */
+s32 sub_0800F1C4(void)
+{
+    // TODO: sub_0800F1C4 is the same as sub_0800E40C_inline_0
+    s32 res;
+    res = 1;
+    if ((gEwramData->unk_60.unk_42C & 1) && (gEwramData->unk_13110.unk_13110->unk_528.unk_528_16.unk_52A > 0x70))
+        res = 0;
+    return res;
+}

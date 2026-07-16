@@ -1,0 +1,26 @@
+[
+ {
+  "func": "sub_0800975C",
+  "tu": "src/code_080096AC.c",
+  "scratch": "ai_gba/scratch/agent_sub_0800975C.c",
+  "addr": "0x800975c"
+ },
+ {
+  "func": "sub_0800E708",
+  "tu": "src/code_0800CB00.c",
+  "scratch": "ai_gba/scratch/agent_sub_0800E708.c",
+  "addr": "0x800e708"
+ },
+ {
+  "func": "sub_080083C8",
+  "tu": "src/code_08005894.c",
+  "scratch": "ai_gba/scratch/agent_sub_080083C8.c",
+  "addr": "0x80083c8"
+ },
+ {
+  "func": "sub_080370F0",
+  "tu": "src/code_08036B40.c",
+  "scratch": "ai_gba/scratch/agent_sub_080370F0.c",
+  "addr": "0x80370f0"
+ }
+]
