@@ -31,6 +31,10 @@ def main():
     manifest = json.loads((CVAOS / "ai_gba/wave/manifest.json").read_text())
     ok, miss, absent = [], [], []
     for m in manifest:
+        if not m.get("tu"):
+            # FRESH-asm target: oracle-match only; src-promotion (asm-TU split)
+            # is not built yet — never "promote" into an empty path.
+            continue
         scratch = CVAOS / m["scratch"]
         if not scratch.is_file():
             absent.append(m["func"])
