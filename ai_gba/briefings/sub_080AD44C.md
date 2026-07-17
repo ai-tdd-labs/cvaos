@@ -1,3 +1,219 @@
+# Target: sub_080AD44C (cvaos GBA, agbcc) — FRESH asm function
+
+Source asm TU: asm/code/code_080A0A8C.s (do NOT edit it)
+Your candidate (standalone TU): ai_gba/scratch/agent_sub_080AD44C.c
+Address: 0x80ad44c
+Oracle (run from /Users/chrislamark/projects/recomp/nds_recompiler/ai-assisted-decomp/cvaos):
+  ../st/.venv/bin/python tools_ai/gbamatch.py --src ai_gba/scratch/agent_sub_080AD44C.c --func sub_080AD44C
+
+## Reference asm (the truth, from the ROM)
+```
+sub_080AD44C: @ 0x080AD44C
+	push {r4, r5, lr}
+	adds r4, r0, #0
+	ldrb r0, [r4, #0xb]
+	cmp r0, #1
+	beq _080AD4CA
+	cmp r0, #1
+	bgt _080AD460
+	cmp r0, #0
+	beq _080AD466
+	b _080AD596
+_080AD460:
+	cmp r0, #2
+	beq _080AD50E
+	b _080AD596
+_080AD466:
+	ldrb r0, [r4, #0xc]
+	cmp r0, #0
+	beq _080AD472
+	cmp r0, #1
+	beq _080AD4B2
+	b _080AD596
+_080AD472:
+	adds r0, r4, #0
+	adds r0, #0x6d
+	ldrb r0, [r0]
+	cmp r0, #2
+	beq _080AD488
+	adds r0, r4, #0
+	movs r1, #2
+	movs r2, #0
+	movs r3, #1
+	bl sub_0803F2C8
+_080AD488:
+	movs r0, #0x80
+	lsls r0, r0, #8
+	str r0, [r4, #0x48]
+	movs r0, #0x80
+	lsls r0, r0, #6
+	str r0, [r4, #0x4c]
+	adds r0, r4, #0
+	bl sub_0806BC40
+	ldr r1, [r4, #0x48]
+	adds r0, r4, #0
+	bl sub_0806E120
+	ldr r0, [r4, #0x48]
+	rsbs r0, r0, #0
+	str r0, [r4, #0x48]
+	movs r0, #0x20
+	strb r0, [r4, #0xd]
+	ldrb r0, [r4, #0xc]
+	adds r0, #1
+	strb r0, [r4, #0xc]
+_080AD4B2:
+	ldrb r0, [r4, #0xd]
+	subs r0, #1
+	strb r0, [r4, #0xd]
+	lsls r0, r0, #0x18
+	lsrs r0, r0, #0x18
+	cmp r0, #0xff
+	bne _080AD596
+	movs r0, #1
+	strb r0, [r4, #0xb]
+	movs r0, #0
+	strb r0, [r4, #0xc]
+	b _080AD596
+_080AD4CA:
+	ldrb r0, [r4, #0xc]
+	cmp r0, #0
+	beq _080AD4D6
+	cmp r0, #1
+	beq _080AD4EA
+	b _080AD596
+_080AD4D6:
+	movs r1, #0xc0
+	lsls r1, r1, #7
+	str r1, [r4, #0x48]
+	str r1, [r4, #0x4c]
+	adds r0, r4, #0
+	bl sub_0806E120
+	ldrb r0, [r4, #0xc]
+	adds r0, #1
+	strb r0, [r4, #0xc]
+_080AD4EA:
+	adds r0, r4, #0
+	bl sub_0803F17C
+	adds r0, r4, #0
+	bl sub_0806BDEC
+	lsls r0, r0, #0x10
+	asrs r0, r0, #0x10
+	cmp r0, #0
+	bge _080AD500
+	rsbs r0, r0, #0
+_080AD500:
+	cmp r0, #0x27
+	bgt _080AD596
+	movs r1, #0
+	movs r0, #2
+	strb r0, [r4, #0xb]
+	strb r1, [r4, #0xc]
+	b _080AD596
+_080AD50E:
+	ldrb r2, [r4, #0xc]
+	cmp r2, #0
+	beq _080AD51A
+	cmp r2, #1
+	beq _080AD54C
+	b _080AD596
+_080AD51A:
+	movs r5, #0xc0
+	lsls r5, r5, #8
+	str r5, [r4, #0x48]
+	movs r0, #0x80
+	lsls r0, r0, #2
+	str r0, [r4, #0x4c]
+	movs r3, #0x50
+	str r3, [r4, #0x50]
+	movs r0, #0x25
+	str r0, [r4, #0x54]
+	adds r0, r4, #0
+	adds r0, #0x58
+	ldrb r1, [r0]
+	movs r0, #0x40
+	ands r0, r1
+	cmp r0, #0
+	bne _080AD544
+	rsbs r0, r5, #0
+	str r0, [r4, #0x48]
+	rsbs r0, r3, #0
+	str r0, [r4, #0x50]
+_080AD544:
+	strh r2, [r4, #0x14]
+	ldrb r0, [r4, #0xc]
+	adds r0, #1
+	strb r0, [r4, #0xc]
+_080AD54C:
+	ldrh r0, [r4, #0x14]
+	bl sub_080009E4
+	cmp r0, #0
+	bge _080AD558
+	adds r0, #3
+_080AD558:
+	asrs r1, r0, #2
+	ldr r0, [r4, #0x44]
+	adds r0, r0, r1
+	str r0, [r4, #0x44]
+	movs r1, #0x80
+	lsls r1, r1, #2
+	adds r0, r1, #0
+	ldrh r3, [r4, #0x14]
+	adds r0, r0, r3
+	strh r0, [r4, #0x14]
+	adds r0, r4, #0
+	adds r0, #0x42
+	movs r1, #0
+	ldrsh r2, [r0, r1]
+	adds r0, #8
+	movs r3, #0
+	ldrsh r1, [r0, r3]
+	adds r0, r1, #0
+	subs r0, #0x28
+	cmp r2, r0
+	blt _080AD58A
+	adds r0, r1, #0
+	adds r0, #0xf0
+	cmp r2, r0
+	ble _080AD596
+_080AD58A:
+	adds r2, r4, #0
+	adds r2, #0x59
+	ldrb r0, [r2]
+	movs r1, #8
+	orrs r0, r1
+	strb r0, [r2]
+_080AD596:
+	ldr r0, [r4, #0x40]
+	ldr r2, [r4, #0x48]
+	adds r0, r0, r2
+	str r0, [r4, #0x40]
+	ldr r0, [r4, #0x44]
+	ldr r1, [r4, #0x4c]
+	adds r0, r0, r1
+	str r0, [r4, #0x44]
+	ldr r0, [r4, #0x50]
+	adds r2, r2, r0
+	str r2, [r4, #0x48]
+	ldr r0, [r4, #0x54]
+	adds r1, r1, r0
+	str r1, [r4, #0x4c]
+	pop {r4, r5}
+	pop {r0}
+	bx r0
+
+
+```
+
+## Callees (bl targets)
+sub_080009E4, sub_0803F17C, sub_0803F2C8, sub_0806BC40, sub_0806BDEC, sub_0806E120 — signatures: grep them in src/*.c and include/.
+Struct context: gEwramData layout lives in include/structs.h (grep the offsets).
+
+## Compiler facts (verified)
+- agbcc (GCC 2.9-era), thumb, flags: -O2 -mthumb-interwork -fhex-asm -f2003-patch
+- The oracle uses the exact Makefile pipeline (preproc | cpp-15 | agbcc | as).
+- This is NOT mwcc. GCC 2.9 idioms apply (see tricks below).
+
+## Known agbcc tricks so far (READ, and APPEND what you discover)
 {"truc": "SUPPORTED (one confirmation, sub_080370F0): GCC 2.9 keeps s16/u8 locals live via lsl/lsr 16-or-24 pairs after arithmetic; a diff showing extra shift pairs usually means the variable type is wrong (widen to s32/u32 or vice versa) - confirmed inversely: assigning a ternary of two s16 vars to an s32 temp DELETED the lsls/asrs #16 pair the ROM has (function shrank 8 bytes), so keep s16 temps s16 when the ROM shows the pairs", "wanneer": "diff shows lsls/asrs #16 or #24 pairs the ROM lacks (or misses ones it has)", "bron": "GCC2.9 general knowledge; inverse effect observed on cvaos sub_080370F0 2026-07-16"}
 {"truc": "HYPOTHESIS, one NEGATIVE data point: assignment-inside-condition `if ((x = g)) {}` vs plain `x = g;` compiled to byte-identical code on agbcc (cvaos sub_080370F0, global-pointer load, no call involved); may still matter around CALL results, unproven", "wanneer": "single mov/register-choice diff around a call result", "bron": "pret GBA folklore; null result on cvaos sub_080370F0 (non-call case) 2026-07-16"}
 {"truc": "PROCESS: the oracle compiles your WHOLE TU copy; never move/reorder other functions in the TU - only edit inside your target's block. A size mismatch note in gbamatch output means your function changed length: wrong control-flow shape", "wanneer": "always", "bron": "tools_ai/gbamatch.py design (2026-07-16)"}
@@ -61,9 +277,11 @@
 {"truc": "PROVEN (solves open-problem 256B): to get the ROM's coalesced gEwramData-deref triplet `ldr r1,=gEwramData; ldr r2,[r1]; ldr r1,=0xA094; adds r2,r2,r1` (deref into a FRESH reg, in-place add, const reusing the freed addr reg), the deref value and the bg pointer must be ONE pseudo with an in-place add: write the pointer materialization as a comma-expr inside the arg per trick 254: `(bg = (void *)gEwramData, bg = &((struct EwramData *)bg)->bgInfo[1], bg)->xPos...` - the plain `(bg = &gEwramData->bgInfo[1])` form makes a separate deref temp that ties to the address reg (ldr r1,[r1]; ldr r3,=0xA094; adds r2,r1,r3). Fixed all 3 call sites in one edit (15->7 diffs)", "wanneer": "diff triplet = deref reusing the =gEwramData addr reg + non-in-place adds with the offset const in a third reg, where ROM shows ldr rF,[rA]; ldr rA,=OFF; adds rF,rF,rA", "bron": "cvaos sub_0804FE20, proven 2026-07-16"}
 {"truc": "PROVEN: when several switch cases each run a step-16 sweep loop, the ROM sharing ONE callee-saved counter reg (r5) across cases 1/2/3/4 plus a second (r4) only for case-0's inner loop means the SOURCE reused one variable for all primary loops and a second only for the nested one; giving each case its own semantically-named counter splits the pseudos and permutes r4/r5 (5 extra diffs). Also: the case-0 outer loop with the increment parked early in r8 comes from `next = i + 0x10;` placed AFTER the inner loop's init and bound statements (`j = -h/2; bound = h/2; next = i+0x10; if (j < bound) do{...}while(j < h/2);` with plain `while` for the outer loop and `i = next;` at its end) - this reproduces the ROM's asrs/lsrs/movs#0x10/adds/mov-r8/cmp emission order exactly", "wanneer": "multi-case draw/sweep functions where the ROM keeps the same counter reg in every case, or an outer-loop increment is computed into r8 between the inner loop's bound and guard", "bron": "cvaos sub_0804FE20, proven 2026-07-16 (20->15 diffs)"}
 {"truc": "OPEN PROBLEM sub_0804FE20 (7 diffs, NONMATCH kept, size exact 0x180): trick 256(A) confirmed structural - first insn `ldrsh` of a s16 field at offset 0x30 via the thumb *extendhisi2_insn scratch-clobber pattern: local-alloc gives the SCRATCH r0 (allocated during the insn scan, before qtys) and the load result r1, ROM has the reverse; the whole 7-halfword prologue residue cascades from that one choice. Tested: named s32 index (canonicalizes), ++/-- boost (local qty_n_refs counted post-combine: refs stay, only live length grows), empty `asm(\"\" : \"+r\"(n))` refs boost x1 and x2 (refs 5/7 visible in -dl dump, allocation unchanged - qty priority does NOT beat the scratch), named `off=0x30` + input-only asm (REG_EQUIV rematerializes, +4 bytes), `register s32 n asm(\"r0\")` (fixes prologue but poisons downstream reload picks: 15 diffs elsewhere). Conclusion: no clean source knob; the scratch-vs-dest reg race at a function's FIRST ldrsh needs r0 busy at that insn, which nothing before the param copy can provide", "wanneer": "first body insns are movs rX,#imm / ldrsh rY,[param,rX] with X/Y swapped vs ROM and the multiply/base chain mirrored r0<->r1", "bron": "cvaos sub_0804FE20 session 2026-07-16, unresolved (7 diffs)"}
-{"truc": "SUPPORTED (re-confirms 'widen s16 locals'): abs-clamp on an s16-returning callee (`v=call(); if(v<0)v=-v; if(v<=K)`) must use an s32 local - the s16 return already makes the CALLER emit one lsls#16/asrs#16 pair after bl, and an s16 local adds a second pack/unpack pair per use (+6 bytes, branch-offset cascade through the whole switch). Also observed: plain sequential `obj->modeA = 2; obj->modeB = 0;` u8 stores compiled to ROM's movs r1,#0; movs r0,#2; strb r0; strb r1 (constants materialized in REVERSE statement order, each in its own reg) with no source trick needed", "wanneer": "extend pairs doubled after a bl to an s16-returning function, or you are tempted to add temps to reproduce a movs#0-before-movs#2 constant order", "bron": "cvaos sub_080AD44C, 101->0 diffs in one edit (attempt 2), 2026-07-17"}
-{"truc": "PROVEN: a u16 local assigned a u16-returning call result (angle = ArcTan2(...)) gets its zero-extend (lsls#16/lsrs#16) AT THE DEF (PROMOTE_MODE promotes HImode locals to SImode, extend emitted with the assignment), so any statement written between the bl and the first use still lands AFTER the extend; when the ROM builds an address between the bl and the lsls/lsrs pair, store the raw result in an s32 local instead (coalesces to nothing) and cast (u16)raw at the use site - the extend then emits at the use, after the interposed address-build statement", "wanneer": "diff shows lsls#16/lsrs#16 of a call result immediately after the bl where the ROM has other insns (e.g. an address computation) in between", "bron": "cvaos sub_080AC314, 48->1 chain, proven 2026-07-17"}
-{"truc": "PROVEN: a named-pointer statement `m = &p[i];` expands as plus(p, i*size) -> adds rD, base, off, but anonymous ARRAY_REF address CSE temps and the ROM emit adds rD, off, base (offset as Rn); write the arithmetic explicitly with the offset on the left: `m = (struct Node *)(i * 0x38 + (s32)p);` - integer + casted-pointer keeps source operand order at expand and the i*8 subterm still CSEs with an earlier lsls r4,i,#3", "wanneer": "exactly 1 diff: adds rD,rA,rB vs adds rD,rB,rA on a pointer = base + scaled-index assignment", "bron": "cvaos sub_080AC314, 1->0 diffs, proven 2026-07-17"}
-{"truc": "CONFIRMS 235/257: writing a 2/3-way select through a value temp (`w=A; else w=B; m->f=w;`) let jump.c collapse the diamond into compute-else + conditional-overwrite (adds emitted unconditionally above the beq) AND cross_jump merged the two `mov rX,r8; subs` tails into one shared block (function 10 bytes short); duplicating the STORE into every arm (`m->f = 0x38000 - s;` etc.) reproduced the ROM's full per-arm bodies with only the str cross-jump-merged - per-arm expression temps then also get DIFFERENT scratch regs (mov r1,r8 vs mov r2,r8), which is what blocks the bigger tail-merge exactly like the ROM", "wanneer": "candidate ~6-10 bytes short around an if/else ladder that converges on one str, with a shared subtract block or an unconditional else-value computed before the cmp", "bron": "cvaos sub_080AC314, proven 2026-07-17"}
-{"truc": "PROVEN: a byte-table lookup `((u8 *)0x08XXXXXX)[idx]` (or *(ptr+idx), or a single-use local/comma-expr pointer - cse const-propagates them all identically) emits the table-address literal ldr AFTER the index ldrsb, at the adds; to get the ROM order `ldr rT,=table; movs rI,#off; ldrsb; adds` declare the table as an EXTERN ARRAY (`extern u8 gUnk_08XXXXXX[];`) and index it - ARRAY_REF of an array-typed global forces the symbol_ref base into a register BEFORE the index expression is expanded. Oracle wildcards the reloc slot so an unmapped gUnk_ address still byte-matches", "wanneer": "3-diff residue = ldr-literal of a data-table address permuted after the movs/ldrsb index pair that the ROM has it before", "bron": "cvaos sub_080B4370, 3->0 diffs, proven 2026-07-17"}
-{"truc": "PROVEN: bitfield stores vs raw byte-pointer RMW pick different mask materializations: `param_0->unk_53C_5 = 0` (u8:1 bitfield) masks with SImode ~0x20 emitted as `movs #0x21; rsbs` (imm doesn't fit, ~x = -(x+1)), while `*((u8*)p+0x58) &= ~0x21` folds the constant to a byte (`movs #0xDE; ands`) - 2 bytes shorter, mismatch; conversely a |= of a byte through a raw u8 pointer matches the bitfield-set shape exactly (movs #imm; orrs). READ the ROM's negated constants as ~(c-1): `movs #0x79; rsbs` is ~0x78 (a plain 4-bit-field copy mask), NOT ~0x79 - misreading it as an extra bit-clear adds a phantom second statement (+4 bytes, extra ands -2)", "wanneer": "diff shows movs #imm8/ands where ROM has movs #(imm+1)/rsbs/ands on a byte RMW, or you are tempted to add a second bitfield-clear to explain a mask", "bron": "cvaos sub_080B4370, 60->19->3 chain, proven 2026-07-17"}
+
+
+## Rules
+- English /* */ doc comment above the function (what it does, evidence).
+- Append NEW codegen tricks to ai_gba/tricks.jsonl as {"truc","wanneer","bron"};
+  UPDATE any HYPOTHESIS entry you prove or disprove.
+- Never touch files outside your candidate + ai_gba/tricks.jsonl.
+- Finish with the oracle command above; report its last line verbatim.

@@ -1,3 +1,6 @@
+/* ROM data symbols referenced by extern from matched C (resolve at link) */
+gUnk_085287CD = 0x085287CD;
+
 MEMORY {
     ewram (rwx): ORIGIN = 0x02000000 LENGTH = 256K
     iwram (rwx): ORIGIN = 0x03000000 LENGTH = 32K
@@ -126,8 +129,14 @@ SECTIONS {
         asm/gen/code_08090914_part1.o(.text);
         src/h2h/sub_0809F0D0.o(.text);
         asm/gen/code_08090914_part2.o(.text);
-        asm/code/code_080A0A8C.o(.text);
-        asm/code/code_080B0AD4.o(.text);
+        asm/gen/code_080A0A8C_part0.o(.text);
+        src/h2h/sub_080AC314.o(.text);
+        asm/gen/code_080A0A8C_part1.o(.text);
+        src/h2h/sub_080AD44C.o(.text);
+        asm/gen/code_080A0A8C_part2.o(.text);
+        asm/gen/code_080B0AD4_part0.o(.text);
+        src/h2h/sub_080B4370.o(.text);
+        asm/gen/code_080B0AD4_part1.o(.text);
         asm/gen/code_080C0A1C_part0.o(.text);
         src/h2h/EnemyGhostDancerUpdate.o(.text);
         asm/gen/code_080C0A1C_part1.o(.text);

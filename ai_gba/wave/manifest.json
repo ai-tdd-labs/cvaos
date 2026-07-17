@@ -155,5 +155,26 @@
   "asm": "asm/code/code_08040A38.s",
   "scratch": "ai_gba/scratch/agent_Object0DUpdate.c",
   "addr": "0x80507bc"
+ },
+ {
+  "func": "sub_080AC314",
+  "tu": "",
+  "asm": "asm/code/code_080A0A8C.s",
+  "scratch": "ai_gba/scratch/agent_sub_080AC314.c",
+  "addr": "0x80ac314"
+ },
+ {
+  "func": "sub_080AD44C",
+  "tu": "",
+  "asm": "asm/code/code_080A0A8C.s",
+  "scratch": "ai_gba/scratch/agent_sub_080AD44C.c",
+  "addr": "0x80ad44c"
+ },
+ {
+  "func": "sub_080B4370",
+  "tu": "",
+  "asm": "asm/code/code_080B0AD4.s",
+  "scratch": "ai_gba/scratch/agent_sub_080B4370.c",
+  "addr": "0x80b4370"
  }
 ]
