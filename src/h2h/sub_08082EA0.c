@@ -41,6 +41,8 @@ struct Sub82EA0Task {
 };
 
 /*
+ * PURPOSE: Plays a scripted camera-panning cutscene sequence step by step.
+ *
  * State machine for a camera-panning scripted sequence.
  * - stage 0: wait 8 frames (counter at 0xD), then advance stage and reset it.
  * - stage 1: if the "started" flag (unk_42C bit0) is clear, advance stage,

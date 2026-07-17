@@ -8,7 +8,8 @@ extern s32 sub_08069A00(struct EwramData_EntityData *param_0, s32 param_1, s32 p
 extern s32 sub_0806B120(struct EwramData_EntityData *param_0, s32 param_1);
 extern s32 sub_0806CFFC(s16 param_0, s16 param_1, s32 param_2, s32 param_3);
 
-/* sub_0807A2E4: entity per-frame update for a rising/vertical-motion actor.
+/* PURPOSE: Runs the per-frame movement of a rising or floating enemy, probably.
+ * sub_0807A2E4: entity per-frame update for a rising/vertical-motion actor.
  * State 0 primes the vertical accel/velocity, state 1 advances a wrapped
  * phase counter (unk_4FC in [0, 0x240000)), asks a helper for a direction bit
  * (unk_53C_6) that selects the vertical velocity target (unk_534) and clamps

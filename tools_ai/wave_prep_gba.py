@@ -153,7 +153,9 @@ Struct context: gEwramData layout lives in include/structs.h (grep the offsets).
 {tricks_txt}
 
 ## Rules
-- English /* */ doc comment above the function (what it does, evidence).
+- English /* */ doc comment above the function. FIRST line MUST be:
+  'PURPOSE: <one short, simple plain-English sentence saying what this function
+  is FOR>' — so simple a modder instantly gets it. Then details/evidence.
 - Append NEW codegen tricks to ai_gba/tricks.jsonl as {{"truc","wanneer","bron"}};
   UPDATE any HYPOTHESIS entry you prove or disprove.
 - Never touch files outside your candidate + ai_gba/tricks.jsonl.
@@ -214,7 +216,9 @@ Only edit inside your working copy. The harvest tool verifies and promotes it.
 {tricks_txt}
 
 ## Rules
-- English /* */ doc comment above the function (what it does, evidence).
+- English /* */ doc comment above the function. FIRST line MUST be:
+  'PURPOSE: <one short, simple plain-English sentence saying what this function
+  is FOR>' — so simple a modder instantly gets it. Then details/evidence.
 - Append NEW codegen tricks to ai_gba/tricks.jsonl as {{"truc","wanneer","bron"}}.
 - Never touch files outside your working copy + ai_gba/tricks.jsonl.
 - Finish with the oracle command above; report its last line verbatim.

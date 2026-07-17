@@ -3,6 +3,8 @@
 #include "code/code_08040A38.h"
 
 /**
+ * PURPOSE: Moves a child effect so it follows its parent entity's position and angle.
+ *
  * @brief Updates a child effect from its parent entity's state and trajectory.
  *
  * The parent pointer and entity fields are identified by the reference ROM's

@@ -19,7 +19,13 @@ struct Unk_08526064 {
  * per-shape x/y offset). Mode unk_4F8 selects the sweep: 0 = full 2D grid,
  * 1 = vertical line, 2 = vertical line shifted 16px left, 3/4 = horizontal
  * line. Evidence: jump table at 0x0804FE60, camera reads at
- * gEwramData+0xA094 (bgInfo[1]) with ldrsh at +6/+0xA. */
+ * gEwramData+0xA094 (bgInfo[1]) with ldrsh at +6/+0xA.
+ *
+ * STATUS 2026-07-17: 7 diffs kept. Residue mechanism now understood (see
+ * tricks.jsonl "DIAGNOSIS CORRECTED"): local-alloc QTY_CMP_PRI race between
+ * the ldrsh dest n (10000) and the tied x12 shift-add chain qty (24000); a
+ * mid-chain double-ref asm flips it and matches all 7 prologue halfwords but
+ * shifts reload spill picks downstream (net 15 diffs) - so it stays out. */
 void sub_0804FE20(struct EwramData_EntityData *param_0)
 {
     struct Unk_08526064 *entry;

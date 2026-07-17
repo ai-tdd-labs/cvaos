@@ -25,6 +25,8 @@
 extern void sub_0804DF3C(struct EwramData_EntityData *param_0);
 
 /**
+ * PURPOSE: Runs the scripted object that stops the player at a set spot in a room (object 04).
+ *
  * @brief 4E770 | Object 04 create/update handler.
  *
  * If the object's sub-type (unk_514) is <= 1 and the room-event bit

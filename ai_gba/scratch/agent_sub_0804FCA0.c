@@ -21,6 +21,12 @@
  *
  * Evidence: reference asm asm/code/code_08040A38.s @ 0x0804FCA0; camera-read
  * idiom matches GetEntityRoom{X,Y}PositionWhole in src/code_08001194.c.
+ *
+ * STATUS 2026-07-17: 7 diffs of 0x180 (was 15). Trick 61 (comma-expr bg
+ * materialization, proven on sub_0804FE20) applied to all 3 call sites fixed
+ * the gEwramData-deref triplet (problem B). The remaining 7 halfwords are the
+ * IDENTICAL prologue r0/r1 mirror as sub_0804FE20 (shared root, see tricks
+ * entry on the n-vs-multiply-chain QTY_CMP_PRI race in local-alloc).
  */
 
 struct HitboxDesc {
@@ -49,7 +55,7 @@ void sub_0804FCA0(struct EwramData_EntityData *entity)
         case 1:
             for (i = -(s32)desc->unk_7 / 2; i < (desc->unk_7 >> 1); i += 0x10) {
                 sub_08002200(
-                    (s16)entity->unk_524.unk_524_16.unk_526 + (s16)(bg = &gEwramData->bgInfo[1])->xPos.part16.integer + ox,
+                    (s16)entity->unk_524.unk_524_16.unk_526 + (s16)(bg = (void *)gEwramData, bg = &((struct EwramData *)bg)->bgInfo[1], bg)->xPos.part16.integer + ox,
                     (s16)entity->unk_528.unk_528_16.unk_52A + (s16)bg->yPos.part16.integer + oy - i);
             }
             break;
@@ -57,7 +63,7 @@ void sub_0804FCA0(struct EwramData_EntityData *entity)
         case 4:
             for (i = -(s32)desc->unk_6 / 2; i < (desc->unk_6 >> 1); i += 0x10) {
                 sub_08002200(
-                    (s16)entity->unk_524.unk_524_16.unk_526 + (s16)(bg = &gEwramData->bgInfo[1])->xPos.part16.integer + ox - i,
+                    (s16)entity->unk_524.unk_524_16.unk_526 + (s16)(bg = (void *)gEwramData, bg = &((struct EwramData *)bg)->bgInfo[1], bg)->xPos.part16.integer + ox - i,
                     (s16)entity->unk_528.unk_528_16.unk_52A + (s16)bg->yPos.part16.integer + oy);
             }
             break;
@@ -65,7 +71,7 @@ void sub_0804FCA0(struct EwramData_EntityData *entity)
             for (i = -(s32)desc->unk_6 / 2; i < (desc->unk_6 >> 1); i += 0x10) {
                 for (j = -(s32)desc->unk_7 / 2; j < (desc->unk_7 >> 1); j += 0x10) {
                     sub_08002200(
-                        (s16)entity->unk_524.unk_524_16.unk_526 + (s16)(bg = &gEwramData->bgInfo[1])->xPos.part16.integer + ox + i,
+                        (s16)entity->unk_524.unk_524_16.unk_526 + (s16)(bg = (void *)gEwramData, bg = &((struct EwramData *)bg)->bgInfo[1], bg)->xPos.part16.integer + ox + i,
                         (s16)entity->unk_528.unk_528_16.unk_52A + (s16)bg->yPos.part16.integer + oy + j);
                 }
             }

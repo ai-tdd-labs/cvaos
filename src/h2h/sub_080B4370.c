@@ -4,6 +4,8 @@
 extern u8 gUnk_085287CD[]; /* byte table at 0x085287CD (pose offset per parent unk_4F6) */
 
 /**
+ * PURPOSE: Runs a child sprite that sticks to its parent and blinks before disappearing.
+ *
  * @brief B4370 | Update function for a child/attachment entity that mirrors its
  * parent entity (pointer stored in unk_4FC): a 7-state machine (init sprite via
  * sub_0803B924 with graphics at 0x08244220, wait for parent state 3, a timed

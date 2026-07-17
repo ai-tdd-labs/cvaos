@@ -10,7 +10,8 @@
 extern s32 sub_080698A8(struct EwramData_EntityData *param_0, s32 param_1, s32 param_2, s32 param_3);
 extern s32 sub_0806CFFC(s16 param_0, s16 param_1, s16 param_2, s16 param_3);
 
-/* Entity AI state machine (6 states via unk_4EF).
+/* PURPOSE: Runs an enemy's six-step AI routine (appear, drop down, land, then act).
+ * Entity AI state machine (6 states via unk_4EF).
  * State 0: set flag bit0 in unk_4FC, show (unk_53C_5 = 1).
  * State 1: advance state, hide (unk_53C_5 = 0), set unk_538 = 0x2000; falls through.
  * State 2: set flags |= 3, clear timers, physics update via sub_080698A8; on ground

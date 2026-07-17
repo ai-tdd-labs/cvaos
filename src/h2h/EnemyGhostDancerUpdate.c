@@ -33,6 +33,8 @@ extern void sub_0806DF20(struct EwramData_EntityData *);
 extern void sub_080421AC(void *, struct EwramData_EntityData *);
 
 /**
+ * PURPOSE: Runs the Ghost Dancer enemy's behavior each frame.
+ *
  * @brief 80C2F0C | Per-frame update for the Ghost Dancer enemy.
  *
  * State (unk_4EE) 5 hands off to sub_080C336C and returns. Otherwise it

@@ -6,6 +6,8 @@
 extern struct EwramData_EntityData *sub_080458E4(struct EwramData_EntityData *, u16, u8, u32);
 
 /**
+ * PURPOSE: Starts the player's jump when the jump button is pressed and jumping is allowed.
+ *
  * Handles a player jump transition when the required movement flags and jump
  * input are active, as evidenced by the velocity, animation, and sound setup.
  */

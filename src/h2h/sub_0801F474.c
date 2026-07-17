@@ -5,6 +5,8 @@ extern void sub_0801F0E4(struct EwramData_EntityData *param_0);
 extern void sub_080458E4(struct EwramData_EntityData *param_0, u32 param_1, u32 param_2, u32 param_3);
 
 /**
+ * PURPOSE: Handles the player's ability button and jump state changes.
+ *
  * @brief Handles the player's ability-button action and jump-state transitions.
  *
  * The entity-field accesses and flag masks are reconstructed from the ROM code at

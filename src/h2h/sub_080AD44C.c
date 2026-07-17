@@ -7,6 +7,8 @@ extern s16 sub_0806BDEC(struct EwramData_EntityData *param_0);
 extern void sub_0806E120(struct EwramData_EntityData *param_0, s32 param_1);
 
 /**
+ * PURPOSE: Runs a flying enemy's three-phase attack: take off, fly, then swoop down, probably.
+ *
  * Per-frame update for a three-phase flying entity (boss intro / swoop AI).
  * Phase 0: unless pose 2 is already set (unk_551), switch animation to pose 2,
  *   launch with velocity (0x8000, 0x2000), snap to the floor via sub_0806BC40 /

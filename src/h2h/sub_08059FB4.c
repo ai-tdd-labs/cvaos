@@ -9,6 +9,8 @@
  */
 
 /**
+ * PURPOSE: Moves a familiar-style helper that circles around its owner each frame.
+ *
  * Per-frame update for an entity orbiting/following a parent entity
  * (familiar-style). Advances position by velocity; while active
  * (unk_4EF == 0) recomputes velocity so the entity homes onto a point

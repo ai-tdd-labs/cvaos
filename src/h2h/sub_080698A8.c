@@ -2,6 +2,8 @@
 #include "code/code_08060B98.h"
 
 /*
+ * PURPOSE: Moves an entity and stops it when it bumps into walls, floors or ceilings.
+ *
  * sub_080698A8: horizontal/vertical collision resolution for a moving entity.
  *
  * unk_524.32 and unk_528.32 are 16.16 fixed-point X / Y sub-positions;

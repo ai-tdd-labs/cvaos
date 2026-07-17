@@ -6,6 +6,8 @@
 extern u16 sub_080421AC(void *param_0, struct EwramData_EntityData *param_1);
 
 /**
+ * PURPOSE: Runs the small object (0x0D) that gets knocked away when the player touches or hits it.
+ *
  * @brief 507BC | Update function for object 0x0D.
  *
  * Sets the sprite-flip flag unk_53C_5 from the signed field unk_52A

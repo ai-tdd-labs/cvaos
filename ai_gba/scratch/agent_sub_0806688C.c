@@ -33,6 +33,38 @@ struct Obj {
  * into each predecessor block (the per-branch `ldrb r2, [r5, #0x14]`),
  * so the span limit stays in a scratch register instead of being carried
  * as a callee-saved local.
+ *
+ * NONMATCH, 2 diffs of 186 halfwords (down from 3; see tricks.jsonl):
+ *
+ * 1. +0x0c: `adds r3,r0,r3` (18c3) vs ROM `adds r3,r3,r0` (181b) - same
+ *    registers, swapped RTL operand order. The volatile read below stops
+ *    combine from folding the unk_17 byte load into the pointer add as a
+ *    subreg-of-MEM (which would be reload-unfolded, see point 3), but the
+ *    volatile QI temp instead merges as a subreg-of-REG, and agbcc's
+ *    combine canonicalization (combine.c "put a complex expression
+ *    first": REG is class 'o', SUBREG is class 'x') pins the subreg into
+ *    operand 0, where it satisfies s_register_operand and sticks. A
+ *    subreg-of-MEM fails the operand-0 predicate and gets swapped back
+ *    (reg first) - that is why the non-volatile variant has the ROM's
+ *    operand order but loses the literal register (point 3).
+ *
+ * 2. +0x6c: `b 0x136` vs ROM `b 0x138` - our goto-tail from the *cell
+ *    store block lands on the PRE reload pad (ldrb r2,[r5,#0x14]) instead
+ *    of the tail proper. ROM's per-arm r2 loads include one at 0x8e that
+ *    is DEAD in the final code (every 0x40-arm exit passes a reload of
+ *    r2), which a source-level local would not survive (flow deletes dead
+ *    sets), so the ROM tail shape could not be reproduced by any rows-
+ *    local restructuring tried (they all drop the 12 bytes of pad loads).
+ *
+ * 3. Why the volatile: without it, expand's zero-extend of unk_17 folds
+ *    into the add as subreg-of-MEM and reload must un-fold it. That
+ *    reload consumes the first slot of reload1.c's per-function
+ *    round-robin spill rotation (last_spill_reg, spill_regs[0]=r0), so
+ *    the 0x085269FC literal reload lands on r3 instead of ROM's r0
+ *    (2 diffs at +0x12/+0x14) - the ROM pairing unfold=r0 AND literal=r0
+ *    is arithmetically impossible under the rotation, proving ROM had no
+ *    unfold reload there. The volatile removes that reload, making the
+ *    literal reload the first one -> r0, matching ROM.
  */
 s32 sub_0806688C(u8 *param_0, struct Obj *obj, u32 param_2, u8 *param_3, u32 flags)
 {
@@ -44,7 +76,8 @@ s32 sub_0806688C(u8 *param_0, struct Obj *obj, u32 param_2, u8 *param_3, u32 fla
     const u8 *tbl;
 
     param_3 += 1;
-    tbl = (const u8 *)0x085269FC + ((param_3[obj->unk_17]) << 2);
+    param_3 += *(volatile u8 *)&obj->unk_17; /* volatile: keep the byte load out of combine (doc pt 3) */
+    tbl = (const u8 *)0x085269FC + ((*param_3) << 2);
     ret = sub_08067660(tbl[0], tbl[1]);
     ret2 = ret;
     cell = param_0 + (obj->unk_17 + 0x3D1);

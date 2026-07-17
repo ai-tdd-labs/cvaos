@@ -1485,6 +1485,7 @@ void sub_0800E540(s32 param_0, s32 param_1)
     DmaQueue_DirectCopy(var_0 << 1, (u32 *)temp_sb, (u32 *) (VRAM_BASE + 0xE000 + (var_5 * 2) + (var_3 * 0x40)));
 }
 
+// PURPOSE: Draws a bordered message box with a given message on the screen, probably.
 // (94.64%) https://decomp.me/scratch/iF3mv
 NONMATCH("asm/non_matching/sub_0800E708.inc", void sub_0800E708(s32 arg0, s32 arg1, s32 arg2))
 {

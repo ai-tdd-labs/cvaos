@@ -8,6 +8,8 @@ extern struct EwramData_EntityData *sub_0806DFF8(void *updateFunc);
 extern void sub_0809FE78(struct EwramData_EntityData *param_0);
 
 /**
+ * PURPOSE: Spawns a small child entity (an attached effect) next to a parent entity.
+ *
  * Spawns a child entity (update func sub_0809FE78) from a parent entity.
  * param_1/param_2 are the fixed-point x/y offsets (stored to unk_4F8/unk_4FC);
  * param_3 (0..4) selects an additional per-variant offset tweak and is stored

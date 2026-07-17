@@ -2148,6 +2148,8 @@ const u8 sUnk_080E0DDC[8] = {
 };
 
 /*
+ * PURPOSE: Handles typing on the name-entry screen where you enter your save name (including cheat names).
+ *
  * 83C8 | Name-entry screen input handler (was NONMATCH, 96.51% at
  * https://decomp.me/scratch/vf8yR — now byte-matching).
  *

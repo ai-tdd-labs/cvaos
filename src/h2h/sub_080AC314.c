@@ -35,6 +35,8 @@ struct AC314Owner
 };
 
 /**
+ * PURPOSE: Starts moving a path point toward its next point, setting its speed, distance and turn angle.
+ *
  * Initialize movement of path node `i` toward node `t`: resets progress,
  * stores the step value and destination index, computes the travel
  * distance (given `d`, or the Euclidean distance via squared fixed-point
